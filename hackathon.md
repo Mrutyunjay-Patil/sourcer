@@ -27,6 +27,19 @@ purchase order back in the same thread.
 - Demo video: (added at submission)
 - Repo: https://github.com/Mrutyunjay-Patil/sourcer
 
+### Judge access
+
+- Sign in at https://careful-capybara-546.convex.site with
+  `judge@sourcer.demo` / `SourcerJudge2026` (seeded demo kitchen, Chai
+  Corner Cafe, Bengaluru). Or create your own account; onboarding takes a
+  minute and has a "load the seeded demo kitchen" shortcut.
+- On any sent request, the "Demo suppliers" buttons make a real supplier
+  inbox on AgentMail reply to its RFQ email. The reply travels through
+  AgentMail, hits the signed webhook, and lands on the board live. Nothing
+  is simulated inside the app.
+- The free AgentMail plan allows three inboxes, so the demo runs with one
+  sourcing inbox and two supplier inboxes.
+
 ### How each sponsor does real work
 
 - **Firecrawl** runs the supplier discovery search and scrapes candidate

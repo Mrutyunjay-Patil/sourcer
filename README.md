@@ -6,7 +6,7 @@ Type what the kitchen needs. Sourcer finds suppliers with Firecrawl, emails them
 
 Built for the Convex All Gas Hackathon. Build log: [hackathon.md](./hackathon.md).
 
-Live app: https://careful-capybara-546.convex.site
+Live app: https://careful-capybara-546.convex.site (demo sign-in: `judge@sourcer.demo` / `SourcerJudge2026`)
 
 ## How the sponsors do real work
 
