@@ -207,11 +207,13 @@ export const sendFollowUp = internalMutation({
       `We are finalising the order and would love to include you. ` +
       `If you can reply with prices, availability and lead time by ${replyBy}, we will consider your quote.\n\n` +
       `Thanks,\n${business.name}`;
+    // Replying to our own message would address it back to us, so name the
+    // supplier as the recipient explicitly; the thread headers still match.
     const outboundId = await agentmail.replyToMessage(
       ctx,
       business.agentInboxId,
       row.sentMessageId,
-      { text, html: toHtml(text), labels: ["rfq-followup", `rfq:${rfq._id}`] },
+      { to: supplier.email, text, html: toHtml(text), labels: ["rfq-followup", `rfq:${rfq._id}`] },
     );
     await ctx.db.patch(rfqSupplierId, {
       followUpOutboundId: outboundId,

@@ -61,7 +61,14 @@ export const ensureSupplierInboxes = internalAction({
   args: {},
   handler: async (): Promise<Array<{ key: string; email: string; name: string; website: string }>> => {
     const out = [];
+    const existing = await am<{ inboxes: Array<{ inbox_id: string }> }>("/inboxes?limit=50");
+    const have = new Set(existing.inboxes.map((i) => i.inbox_id));
     for (const f of SUPPLIER_FIXTURES) {
+      const email = `${f.username}@agentmail.to`;
+      if (have.has(email)) {
+        out.push({ key: f.key, email, name: f.name, website: f.website });
+        continue;
+      }
       try {
         const inbox = await am<{ inbox_id: string }>("/inboxes", {
           method: "POST",

@@ -137,11 +137,19 @@ export const send = mutation({
         `\n\nOrder total: ${business.currency} ${subtotal.toFixed(2)}\n` +
         `Delivery: ${rfq.deliveryWindow}. ${business.deliveryPreferences}\n\n` +
         `Please confirm by replying to this email.\n\nThanks,\n${business.name}`;
-      const args = { text, html: toHtml(text), labels: ["purchase-order", `rfq:${po.rfqId}`] };
-      const outboundId = rs?.sentMessageId
-        ? await agentmail.replyToMessage(ctx, business.agentInboxId, rs.sentMessageId, args)
+      // Reply to the supplier's latest message in the thread so the PO goes
+      // back to them, and name the recipient explicitly.
+      const latestQuote = await latestParsedQuote(ctx, po.rfqId, supplierId);
+      const parentMessageId = latestQuote?.messageId ?? rs?.sentMessageId;
+      const args = {
+        to: supplier.email,
+        text,
+        html: toHtml(text),
+        labels: ["purchase-order", `rfq:${po.rfqId}`],
+      };
+      const outboundId = parentMessageId
+        ? await agentmail.replyToMessage(ctx, business.agentInboxId, parentMessageId, args)
         : await agentmail.sendMessage(ctx, business.agentInboxId, {
-            to: supplier.email,
             subject: `Purchase order ${po.poNumber} from ${business.name}`,
             ...args,
           });

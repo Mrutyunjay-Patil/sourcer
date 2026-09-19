@@ -60,7 +60,10 @@ export const applySeed = internalMutation({
       .first();
     if (!existingHistory) {
       const week = 7 * 24 * 3600_000;
-      for (const [product, unit, key, prices] of history) {
+      const fallbackKey = Object.keys(ids)[0];
+      for (const [product, unit, rawKey, prices] of history) {
+        const key = ids[rawKey] ? rawKey : fallbackKey;
+        if (!key) break;
         const canonical = canonicalName(product);
         const existingProduct = await ctx.db
           .query("products")

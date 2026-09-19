@@ -12,7 +12,7 @@
 - **AI models:** openai/gpt-oss-120b (OpenAI open-weight model served through Cloudflare Workers AI via the OpenAI SDK; base URL and model are env vars so api.openai.com is a one-line switch)
 - **Auth:** Convex Auth
 - **Started:** 2026-09-19T14:59:33Z
-- **Last updated:** 2026-09-19T20:05:00Z
+- **Last updated:** 2026-09-19T20:40:00Z
 
 ## The pitch
 
@@ -143,3 +143,33 @@ went out; Firecrawl discovery returned three Bengaluru wholesalers for
 owner review; a tracked IndiaMART page yielded eight catalog paneer prices
 through Firecrawl scrape plus OpenAI extraction, now visible in the price
 watch with a trend sparkline (`convex/pricing.ts`, `src/pages/Prices.tsx`).
+
+### 2026-09-20 - 3e638fd and working tree
+End-to-end run of the email loop on the dev deployment with real AgentMail
+inboxes: an RFQ went to two supplier inboxes, each replied through the
+AgentMail API, the signed webhook landed each reply on the quote board
+within seconds, OpenAI parsed the clean prose reply (99% confidence), the
+messy one ("out of stock till next week" became a 7 day lead time, 96%)
+and a PDF price sheet (attachment stored in file storage, text extracted,
+97%), the ranking recomputed after every reply with a written rationale,
+the purchase order generated per line and sent, an unrelated email was
+quarantined, and a reply after close was flagged late.
+Bugs found and fixed by that run:
+- The AgentMail attachment endpoint returns metadata with a signed CDN URL,
+  not bytes; ingestion now follows it and falls back to AgentMail's own
+  text extraction (`convex/attachments.ts`).
+- pdf.js detaches the buffer it parses, so the stored size read as 0; a
+  copy is parsed now.
+- Replying to our own outbound message made AgentMail address follow-ups
+  and purchase orders back to the sourcing inbox; both now reply to the
+  supplier's message with an explicit recipient (`convex/email.ts`,
+  `convex/purchaseOrders.ts`).
+- The model spent its output budget on hidden reasoning; the JSON helper
+  now requests low reasoning effort, gives a larger budget and widens it
+  on retry (`convex/lib/llm.ts`).
+- Auto-suggested PO suppliers were treated as owner choices; owner
+  overrides are tracked separately so the recommendation keeps updating.
+- Free AgentMail plans cap inboxes at 3; provisioning now surfaces a
+  retryable message and the demo seed reuses existing inboxes.
+Production: judge account created, demo kitchen seeded, sourcing inbox
+attached, dev webhook removed so production owns inbox events.

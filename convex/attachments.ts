@@ -49,9 +49,16 @@ export const ingestForQuote = internalAction({
         const storageId = await ctx.storage.store(blob);
         let text: string | undefined;
         if (att.contentType === "application/pdf" || att.filename.toLowerCase().endsWith(".pdf")) {
-          text = await pdfText(bytes);
+          text = await pdfText(bytes.slice()).catch(() => "");
+          if (!text.trim()) text = await providerText(textUrl);
           if (text.trim()) extracted.push(`--- ${att.filename} ---\n${text}`);
           else notes.push(`No selectable text found in ${att.filename}.`);
+        } else if (att.contentType.startsWith("text/")) {
+          text = new TextDecoder().decode(bytes);
+          if (text.trim()) extracted.push(`--- ${att.filename} ---\n${text}`);
+        } else {
+          text = await providerText(textUrl);
+          if (text.trim()) extracted.push(`--- ${att.filename} ---\n${text}`);
         }
         await ctx.runMutation(internal.quotes.addAttachment, {
           quoteId: args.quoteId,
