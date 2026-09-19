@@ -14,6 +14,51 @@
 - **Started:** 2026-09-19T14:59:33Z
 - **Last updated:** 2026-09-19T17:05:00Z
 
+## The pitch
+
+A restaurant owner in Bengaluru re-orders the same twenty things every
+Thursday and loses the morning to WhatsApp and email chasing quotes. Sourcer
+takes the note ("20 kg paneer, 10 L sunflower oil, 5 kg tomatoes, and some
+eggs"), finds suppliers, runs the quote thread by email, reads every reply
+the moment it lands, ranks the quotes with a written reason, and sends the
+purchase order back in the same thread.
+
+- Live app: https://careful-capybara-546.convex.site
+- Demo video: (added at submission)
+- Repo: https://github.com/Mrutyunjay-Patil/sourcer
+
+### How each sponsor does real work
+
+- **Firecrawl** runs the supplier discovery search and scrapes candidate
+  pages so OpenAI can keep only real wholesalers; it also scrapes tracked
+  price pages on a weekly cron for the price watch (`convex/discovery.ts`,
+  `convex/pricing.ts`).
+- **AgentMail** gives each business its own inbox; RFQs, follow-up nudges
+  and purchase orders go out through the component's durable sender, and
+  supplier replies come back through the Svix-signed webhook into the quote
+  board without polling (`convex/email.ts`, `convex/http.ts`).
+- **OpenAI** parses the owner's note into line items and asks about
+  ambiguity, drafts the RFQ in the owner's voice, extracts structured
+  quotes from prose and PDF price sheets with confidence scores, and writes
+  the ranking rationale (`convex/ai.ts`).
+
+### Convex primitives and why
+
+- Reactive queries: the quote board, supplier statuses and ranking update
+  the instant a webhook mutation commits.
+- Mutations with tenant scoping resolved from auth, never from client input
+  (`convex/lib/access.ts`).
+- Convex Auth (password) for sign in and the judge demo account.
+- Workflow component: one durable job per RFQ for fan-out, send
+  confirmation, follow-up, close and rank; survives deploys and retries
+  without double sends (`convex/workflow.ts`).
+- Scheduled functions and crons: AI drafting and parsing off the request
+  path, RFQ auto-close every 5 minutes, weekly price re-crawl.
+- File storage for reply attachments with PDF text extraction in a Node
+  action (`convex/attachments.ts`).
+- HTTP actions for the AgentMail webhook and auth discovery, static hosting
+  for the app on convex.site.
+
 ## Log
 
 ### 2026-09-19 - 23d3012
