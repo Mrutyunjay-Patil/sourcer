@@ -39,13 +39,23 @@ export const provisionInbox = internalAction({
     if (!business) return;
     if (business.agentInboxId) return;
     const suffix = businessId.slice(-6).toLowerCase();
-    const inbox = await agentmail.createInbox(ctx, {
-      username: `${slug(business.name) || "sourcer"}-${suffix}`,
-      displayName: `${business.name} via Sourcer`,
-      clientId: `sourcer-${businessId}`,
+    const key = process.env.AGENTMAIL_API_KEY;
+    if (!key) throw new Error("AGENTMAIL_API_KEY is not set on this deployment.");
+    const base = process.env.AGENTMAIL_BASE_URL ?? "https://api.agentmail.to/v0";
+    const res = await fetch(`${base}/inboxes`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: `${slug(business.name) || "sourcer"}-${suffix}`,
+        display_name: `${business.name} via Sourcer`,
+        client_id: `sourcer-${businessId}`,
+      }),
     });
-    const inboxId: string = inbox.inbox_id ?? inbox.inboxId ?? inbox.email;
-    await ctx.runMutation(internal.businesses.setInbox, { businessId, inboxId });
+    if (!res.ok) {
+      throw new Error(`AgentMail inbox creation failed: HTTP ${res.status} ${(await res.text()).slice(0, 300)}`);
+    }
+    const inbox = (await res.json()) as { inbox_id: string };
+    await ctx.runMutation(internal.businesses.setInbox, { businessId, inboxId: inbox.inbox_id });
   },
 });
 
@@ -78,7 +88,7 @@ export const sendRfqToSupplier = internalMutation({
       });
       return { skipped: "unsendable" as const };
     }
-    const subject = rfq.draftSubject ?? `Request for quote: ${rfq.title}`;
+    const subject = personalise(rfq.draftSubject ?? `Request for quote: ${rfq.title}`, supplier, business);
     const text = personalise(rfq.draftBody ?? "", supplier, business);
     const outboundId = await agentmail.sendMessage(ctx, business.agentInboxId, {
       to: supplier.email,
