@@ -12,7 +12,7 @@
 - **AI models:** openai/gpt-oss-120b (OpenAI open-weight model served through Cloudflare Workers AI via the OpenAI SDK; base URL and model are env vars so api.openai.com is a one-line switch)
 - **Auth:** Convex Auth
 - **Started:** 2026-09-19T14:59:33Z
-- **Last updated:** 2026-09-19T17:05:00Z
+- **Last updated:** 2026-09-19T20:05:00Z
 
 ## The pitch
 
@@ -131,3 +131,15 @@ quarantine inbox round it out. Verified in the browser on the dev
 deployment: sign up, onboarding, OpenAI item parsing (eggs flagged with a
 question), AI draft, and a real RFQ send through the AgentMail component.
 Deployed backend and static site to production.
+
+### 2026-09-19 - 432849e, 0c67c9b
+Relative times now tick, every non-submit button is typed, README documents
+setup in under ten steps, and the demo script and social copy live in
+`docs/`. Repo readiness pass: a fresh clone installs, applies the
+component patch and typechecks clean; a secret scan of tracked files found
+nothing. Verified on the dev deployment: the durable workflow closed an
+open RFQ one second after its reply-by time and the owner notification
+went out; Firecrawl discovery returned three Bengaluru wholesalers for
+owner review; a tracked IndiaMART page yielded eight catalog paneer prices
+through Firecrawl scrape plus OpenAI extraction, now visible in the price
+watch with a trend sparkline (`convex/pricing.ts`, `src/pages/Prices.tsx`).
