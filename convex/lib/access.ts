@@ -52,7 +52,7 @@ export async function ownedDoc<T extends OwnedTable>(
 ): Promise<Doc<T>> {
   const doc = await ctx.db.get(id);
   if (!doc || (doc as unknown as { businessId: Id<"businesses"> }).businessId !== business._id) {
-    throw new ConvexError("Not found.");
+    throw new ConvexError(`${table === "rfqs" ? "Request" : "Item"} not found.`);
   }
   return doc as Doc<T>;
 }

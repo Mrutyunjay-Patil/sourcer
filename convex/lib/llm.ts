@@ -24,25 +24,35 @@ export type Usage = { inputTokens: number; outputTokens: number };
 export async function completeJson<T>(
   system: string,
   user: string,
-  options?: { maxTokens?: number },
+  options?: { maxTokens?: number; attempts?: number },
 ): Promise<{ value: T; usage: Usage; raw: string }> {
   const client = openai();
-  const res = await client.chat.completions.create({
-    model: modelName(),
-    messages: [
-      { role: "system", content: system },
-      { role: "user", content: user },
-    ],
-    temperature: 0.1,
-    max_tokens: options?.maxTokens ?? 1500,
-    response_format: { type: "json_object" },
-  });
-  const raw = res.choices[0]?.message?.content ?? "";
-  const usage = {
-    inputTokens: res.usage?.prompt_tokens ?? 0,
-    outputTokens: res.usage?.completion_tokens ?? 0,
-  };
-  return { value: extractJson<T>(raw), usage, raw };
+  const attempts = options?.attempts ?? 3;
+  const usage: Usage = { inputTokens: 0, outputTokens: 0 };
+  let lastRaw = "";
+  let lastError: unknown;
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const res = await client.chat.completions.create({
+      model: modelName(),
+      messages: [
+        { role: "system", content: system + (attempt > 0 ? " Respond with the JSON object only, no prose." : "") },
+        { role: "user", content: user },
+      ],
+      temperature: attempt === 0 ? 0.1 : 0.3,
+      max_tokens: options?.maxTokens ?? 1500,
+      response_format: { type: "json_object" },
+    });
+    usage.inputTokens += res.usage?.prompt_tokens ?? 0;
+    usage.outputTokens += res.usage?.completion_tokens ?? 0;
+    lastRaw = res.choices[0]?.message?.content ?? "";
+    try {
+      return { value: extractJson<T>(lastRaw), usage, raw: lastRaw };
+    } catch (err) {
+      lastError = err;
+      console.warn(`completeJson attempt ${attempt + 1} failed: ${(err as Error).message}; raw=${lastRaw.slice(0, 200)}`);
+    }
+  }
+  throw new Error(`Model did not return JSON after ${attempts} attempts: ${(lastError as Error)?.message ?? ""}`);
 }
 
 export async function completeText(
