@@ -16,6 +16,7 @@ export const me = query({
       deliveryPreferences: business.deliveryPreferences,
       currency: business.currency,
       agentInboxId: business.agentInboxId ?? null,
+      inboxError: business.inboxError ?? null,
       onboardingComplete: business.onboardingComplete,
       isDemo: business.isDemo,
     };
@@ -85,6 +86,24 @@ export const completeOnboarding = mutation({
 export const setInbox = internalMutation({
   args: { businessId: v.id("businesses"), inboxId: v.string() },
   handler: async (ctx, { businessId, inboxId }) => {
-    await ctx.db.patch(businessId, { agentInboxId: inboxId });
+    await ctx.db.patch(businessId, { agentInboxId: inboxId, inboxError: undefined });
+  },
+});
+
+export const setInboxError = internalMutation({
+  args: { businessId: v.id("businesses"), error: v.string() },
+  handler: async (ctx, { businessId, error }) => {
+    await ctx.db.patch(businessId, { inboxError: error });
+  },
+});
+
+/** Owner retry after freeing an inbox slot. */
+export const retryInbox = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const business = await requireBusiness(ctx);
+    if (business.agentInboxId) return;
+    await ctx.db.patch(business._id, { inboxError: undefined });
+    await ctx.scheduler.runAfter(0, internal.email.provisionInbox, { businessId: business._id });
   },
 });

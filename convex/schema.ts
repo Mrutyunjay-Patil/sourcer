@@ -44,6 +44,7 @@ export default defineSchema({
     deliveryPreferences: v.string(),
     currency: v.string(),
     agentInboxId: v.optional(v.string()),
+    inboxError: v.optional(v.string()),
     onboardingComplete: v.boolean(),
     isDemo: v.boolean(),
   })
@@ -103,6 +104,7 @@ export default defineSchema({
     unit: v.string(),
     notes: v.optional(v.string()),
     chosenSupplierId: v.optional(v.id("suppliers")),
+    chosenByOwner: v.optional(v.boolean()),
   })
     .index("by_rfq", ["rfqId"])
     .index("by_business", ["businessId"]),

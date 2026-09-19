@@ -62,15 +62,24 @@ export const ensureSupplierInboxes = internalAction({
   handler: async (): Promise<Array<{ key: string; email: string; name: string; website: string }>> => {
     const out = [];
     for (const f of SUPPLIER_FIXTURES) {
-      const inbox = await am<{ inbox_id: string }>("/inboxes", {
-        method: "POST",
-        body: JSON.stringify({
-          username: f.username,
-          display_name: f.displayName,
-          client_id: `sourcer-demo-${f.key}`,
-        }),
-      });
-      out.push({ key: f.key, email: inbox.inbox_id, name: f.name, website: f.website });
+      try {
+        const inbox = await am<{ inbox_id: string }>("/inboxes", {
+          method: "POST",
+          body: JSON.stringify({
+            username: f.username,
+            display_name: f.displayName,
+            client_id: `sourcer-demo-${f.key}`,
+          }),
+        });
+        out.push({ key: f.key, email: inbox.inbox_id, name: f.name, website: f.website });
+      } catch (err) {
+        // Free AgentMail plans cap inboxes; seed whatever fits and say so.
+        if (String((err as Error).message).includes("limit_exceeded")) {
+          console.warn(`Inbox limit reached; skipping demo supplier ${f.key}.`);
+          continue;
+        }
+        throw err;
+      }
     }
     return out;
   },
@@ -121,12 +130,16 @@ export const replyAsSupplier = internalAction({
       (t.subject ?? "").toLowerCase().includes((bundle.rfq.draftSubject ?? "quote").toLowerCase().slice(0, 20)),
     ) ?? threads.threads[0];
     if (!thread) throw new Error(`No RFQ thread found in ${inboxId} yet.`);
-    const full = await am<{ messages: Array<{ message_id: string; from: string }> }>(
+    const full = await am<{ messages: Array<{ message_id: string; from: string; to?: string[] }> }>(
       `/inboxes/${encodeURIComponent(inboxId)}/threads/${encodeURIComponent(thread.thread_id)}`,
     );
-    const last = full.messages[full.messages.length - 1];
+    // Reply to the buyer's latest message, never to our own earlier reply.
+    const fromBuyer = full.messages.filter((m) => !(m.from ?? "").includes(inboxId));
+    const last = fromBuyer[fromBuyer.length - 1] ?? full.messages[full.messages.length - 1];
+    const buyerAddress = bundle.business.agentInboxId;
     const body = replyBody(style ?? fixture.style, fixture.name, bundle.business, bundle.lineItems);
     const payload: Record<string, unknown> = { text: body.text, html: body.html };
+    if (buyerAddress) payload.to = [buyerAddress];
     if ((style ?? fixture.style) === "pdf") {
       const pdf = priceSheetPdf(fixture.name, bundle.business.currency, bundle.lineItems);
       payload.attachments = [

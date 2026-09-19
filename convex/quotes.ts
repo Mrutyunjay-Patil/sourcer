@@ -133,10 +133,12 @@ export const setParsed = internalMutation({
         source: "quote",
       });
     }
+    // Keep attachment notes (size limit, download failures) next to the parser's.
+    const attachmentNotes = quote.parseNotes && quote.parseStatus === "pending" ? quote.parseNotes : undefined;
     await ctx.db.patch(args.quoteId, {
       parseStatus: args.parseStatus,
       confidence: args.confidence,
-      parseNotes: args.parseNotes,
+      parseNotes: [attachmentNotes, args.parseNotes].filter(Boolean).join(" ") || undefined,
       currency: args.currency,
       deliveryFee: args.deliveryFee,
       leadTimeDays: args.leadTimeDays,
@@ -349,6 +351,14 @@ export const applyRanking = internalMutation({
     ),
   },
   handler: async (ctx, { rfqId, ranking, summary, bestPerLine }) => {
+    // Older quotes from the same supplier drop out of the ranking.
+    const all = await ctx.db.query("quotes").withIndex("by_rfq", (q) => q.eq("rfqId", rfqId)).collect();
+    const ranked = new Set(ranking.map((r) => r.quoteId));
+    for (const q of all) {
+      if (!ranked.has(q._id) && q.rank !== undefined) {
+        await ctx.db.patch(q._id, { rank: undefined, rationale: undefined });
+      }
+    }
     for (const r of ranking) {
       await ctx.db.patch(r.quoteId, {
         rank: r.rank,
@@ -357,10 +367,10 @@ export const applyRanking = internalMutation({
         rationale: r.rationale,
       });
     }
-    // Suggest a supplier per line unless the owner already chose one.
+    // Suggest the cheapest supplier per line; owner overrides stay put.
     for (const b of bestPerLine) {
       const li = await ctx.db.get(b.rfqLineItemId);
-      if (li && !li.chosenSupplierId) {
+      if (li && !li.chosenByOwner && li.chosenSupplierId !== b.supplierId) {
         await ctx.db.patch(b.rfqLineItemId, { chosenSupplierId: b.supplierId });
       }
     }

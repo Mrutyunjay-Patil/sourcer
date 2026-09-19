@@ -52,7 +52,12 @@ export const provisionInbox = internalAction({
       }),
     });
     if (!res.ok) {
-      throw new Error(`AgentMail inbox creation failed: HTTP ${res.status} ${(await res.text()).slice(0, 300)}`);
+      const body = await res.text();
+      const friendly = body.includes("limit_exceeded")
+        ? "The AgentMail plan's inbox limit is reached. Free a slot or upgrade the plan, then retry from Settings."
+        : `AgentMail could not create the inbox (HTTP ${res.status}).`;
+      await ctx.runMutation(internal.businesses.setInboxError, { businessId, error: friendly });
+      throw new Error(`AgentMail inbox creation failed: HTTP ${res.status} ${body.slice(0, 300)}`);
     }
     const inbox = (await res.json()) as { inbox_id: string };
     await ctx.runMutation(internal.businesses.setInbox, { businessId, inboxId: inbox.inbox_id });

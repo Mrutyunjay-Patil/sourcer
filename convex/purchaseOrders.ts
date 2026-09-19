@@ -22,7 +22,7 @@ export const chooseSupplierForLine = mutation({
       .withIndex("by_rfq", (q) => q.eq("rfqId", li.rfqId))
       .first();
     if (po && po.status !== "draft") throw new ConvexError("The purchase order was already sent.");
-    await ctx.db.patch(rfqLineItemId, { chosenSupplierId: supplierId });
+    await ctx.db.patch(rfqLineItemId, { chosenSupplierId: supplierId, chosenByOwner: true });
     if (po) await ctx.db.delete(po._id);
   },
 });

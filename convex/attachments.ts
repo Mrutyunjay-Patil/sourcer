@@ -38,12 +38,14 @@ export const ingestForQuote = internalAction({
         continue;
       }
       try {
-        const bytes = await downloadAttachment(args.inboxId, args.messageId, att.attachmentId);
+        const { bytes, textUrl } = await downloadAttachment(args.inboxId, args.messageId, att.attachmentId);
         if (bytes.byteLength > args.maxBytes) {
           notes.push(`Attachment ${att.filename} exceeded the size limit on download and was not stored.`);
           continue;
         }
-        const blob = new Blob([bytes as unknown as ArrayBuffer], { type: att.contentType });
+        // pdf.js transfers (detaches) the buffer it parses, so keep our own copy.
+        const size = bytes.byteLength;
+        const blob = new Blob([bytes.slice() as unknown as ArrayBuffer], { type: att.contentType });
         const storageId = await ctx.storage.store(blob);
         let text: string | undefined;
         if (att.contentType === "application/pdf" || att.filename.toLowerCase().endsWith(".pdf")) {
@@ -56,7 +58,7 @@ export const ingestForQuote = internalAction({
           storageId,
           filename: att.filename,
           contentType: att.contentType,
-          size: bytes.byteLength,
+          size,
           extractedText: text?.slice(0, 60_000),
         });
       } catch (err) {
@@ -72,19 +74,51 @@ export const ingestForQuote = internalAction({
   },
 });
 
-async function downloadAttachment(
+type AttachmentMeta = {
+  download_url?: string;
+  text_url?: string;
+  content_type?: string;
+};
+
+/**
+ * AgentMail answers the attachment endpoint with metadata carrying a signed
+ * CDN download URL (and, for documents, a URL to its own text extraction).
+ */
+async function attachmentMeta(
   inboxId: string,
   messageId: string,
   attachmentId: string,
-): Promise<Uint8Array> {
+): Promise<AttachmentMeta> {
   const key = process.env.AGENTMAIL_API_KEY;
   if (!key) throw new Error("AGENTMAIL_API_KEY is not set.");
   const url = `${AGENTMAIL_BASE}/inboxes/${encodeURIComponent(inboxId)}/messages/${encodeURIComponent(messageId)}/attachments/${encodeURIComponent(attachmentId)}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${key}` } });
   if (!res.ok) {
-    throw new Error(`AgentMail attachment download failed: HTTP ${res.status}`);
+    throw new Error(`AgentMail attachment lookup failed: HTTP ${res.status}`);
   }
-  return new Uint8Array(await res.arrayBuffer());
+  return (await res.json()) as AttachmentMeta;
+}
+
+async function downloadAttachment(
+  inboxId: string,
+  messageId: string,
+  attachmentId: string,
+): Promise<{ bytes: Uint8Array; textUrl?: string }> {
+  const meta = await attachmentMeta(inboxId, messageId, attachmentId);
+  if (!meta.download_url) throw new Error("AgentMail returned no download URL for the attachment.");
+  const res = await fetch(meta.download_url);
+  if (!res.ok) throw new Error(`Attachment download failed: HTTP ${res.status}`);
+  return { bytes: new Uint8Array(await res.arrayBuffer()), textUrl: meta.text_url };
+}
+
+async function providerText(textUrl: string | undefined): Promise<string> {
+  if (!textUrl) return "";
+  try {
+    const res = await fetch(textUrl);
+    return res.ok ? (await res.text()).trim() : "";
+  } catch {
+    return "";
+  }
 }
 
 async function pdfText(bytes: Uint8Array): Promise<string> {

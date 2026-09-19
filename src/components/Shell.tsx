@@ -1,5 +1,5 @@
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UpdateBanner } from "@convex-dev/static-hosting/react";
 import type { ReactNode } from "react";
@@ -9,6 +9,7 @@ type Business = {
   name: string;
   city: string;
   agentInboxId: string | null;
+  inboxError?: string | null;
   isDemo: boolean;
 };
 
@@ -43,7 +44,12 @@ export function Shell({ business, children }: { business: Business; children: Re
         <div className="rail-foot">
           <div>
             <div className="tiny" style={{ color: "var(--ink-mute)" }}>Sourcing inbox</div>
-            <div className="mono tiny" style={{ wordBreak: "break-all" }}>{business.agentInboxId ?? "provisioning…"}</div>
+            <div className="mono tiny" style={{ wordBreak: "break-all" }}>{business.agentInboxId ?? (business.inboxError ? "not created" : "provisioning…")}</div>
+            {!business.agentInboxId && business.inboxError && (
+              <div className="tiny" style={{ color: "var(--tomato)" }}>
+                {business.inboxError} <RetryInbox />
+              </div>
+            )}
           </div>
           {usage && (
             <div className="tiny">AI today: <span className="num">{usage.requests}</span>/<span className="num">{usage.requestLimit}</span> calls</div>
@@ -59,6 +65,11 @@ export function Shell({ business, children }: { business: Business; children: Re
       </main>
     </div>
   );
+}
+
+function RetryInbox() {
+  const retry = useMutation(api.businesses.retryInbox);
+  return <button type="button" className="btn ghost sm" style={{ padding: "0 4px" }} onClick={() => void retry()}>retry</button>;
 }
 
 export function PageHead({ eyebrow, title, children }: { eyebrow?: string; title: string; children?: ReactNode }) {

@@ -17,6 +17,12 @@ export function modelName(): string {
 
 export type Usage = { inputTokens: number; outputTokens: number };
 
+/** Keep reasoning short so the answer fits the budget; env-tunable. */
+function reasoningOptions(): Record<string, unknown> {
+  const effort = process.env.OPENAI_REASONING_EFFORT ?? "low";
+  return effort === "none" ? {} : { reasoning_effort: effort };
+}
+
 /**
  * Ask for JSON and return the parsed object. Some gateways ignore
  * response_format, so we also tolerate prose around the JSON body.
@@ -39,12 +45,18 @@ export async function completeJson<T>(
         { role: "user", content: user },
       ],
       temperature: attempt === 0 ? 0.1 : 0.3,
-      max_tokens: options?.maxTokens ?? 1500,
+      // Reasoning models spend hidden tokens before the answer; give room
+      // and widen it on every retry.
+      max_tokens: Math.round((options?.maxTokens ?? 1500) * 2.5 * (attempt + 1)),
       response_format: { type: "json_object" },
+      ...reasoningOptions(),
     });
     usage.inputTokens += res.usage?.prompt_tokens ?? 0;
     usage.outputTokens += res.usage?.completion_tokens ?? 0;
     lastRaw = res.choices[0]?.message?.content ?? "";
+    if (!lastRaw.trim()) {
+      console.warn(`completeJson attempt ${attempt + 1}: empty content, finish_reason=${res.choices[0]?.finish_reason}`);
+    }
     try {
       return { value: extractJson<T>(lastRaw), usage, raw: lastRaw };
     } catch (err) {
@@ -68,7 +80,8 @@ export async function completeText(
       { role: "user", content: user },
     ],
     temperature: options?.temperature ?? 0.4,
-    max_tokens: options?.maxTokens ?? 800,
+    max_tokens: Math.round((options?.maxTokens ?? 800) * 2.5),
+    ...reasoningOptions(),
   });
   return {
     text: (res.choices[0]?.message?.content ?? "").trim(),
