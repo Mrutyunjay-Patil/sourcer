@@ -6,6 +6,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 import { Loading, PageHead } from "../components/Shell";
 import { useToast } from "../components/Toast";
 import { ago, money, pct, until, when } from "../lib/format";
+import { useClock } from "../lib/useClock";
 
 type Board = NonNullable<ReturnType<typeof useQuery<typeof api.rfqs.board>>>;
 type SupplierRow = Board["suppliers"][number];
@@ -15,6 +16,7 @@ export default function RfqDetail() {
   const rfqId = id as Id<"rfqs">;
   const board = useQuery(api.rfqs.board, { rfqId });
   const me = useQuery(api.businesses.me);
+  useClock(5000);
   if (board === undefined) return <><PageHead eyebrow="Request" title="Loading…" /><Loading rows={5} /></>;
   const { rfq } = board;
   return (

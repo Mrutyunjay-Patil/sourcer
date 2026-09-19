@@ -5,6 +5,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 import { Empty, Loading, PageHead } from "../components/Shell";
 import { useToast } from "../components/Toast";
 import { ago } from "../lib/format";
+import { useClock } from "../lib/useClock";
 
 export default function Suppliers() {
   const suppliers = useQuery(api.suppliers.list, {});
@@ -17,6 +18,7 @@ export default function Suppliers() {
   const startDiscovery = useMutation(api.discovery.start);
   const track = useMutation(api.pricing.track);
   const { fail, push } = useToast();
+  useClock(5000);
   const [form, setForm] = useState({ name: "", email: "", website: "" });
   const [items, setItems] = useState("paneer, sunflower oil, tomatoes");
   const [editing, setEditing] = useState<Id<"suppliers"> | null>(null);
@@ -57,12 +59,12 @@ export default function Suppliers() {
             <div className="card-pad stack">
               <div className="row">
                 <input className="input" style={{ flex: 1 }} value={items} onChange={(e) => setItems(e.target.value)} placeholder="paneer, sunflower oil, tomatoes" />
-                <button className="btn" onClick={discover} disabled={running}>{running ? "Searching…" : "Find suppliers"}</button>
+                <button type="button" className="btn" onClick={discover} disabled={running}>{running ? "Searching…" : "Find suppliers"}</button>
               </div>
               <span className="hint">Searches the web near {me?.city ?? "you"}, scrapes candidate pages, and lets OpenAI keep only real suppliers. You approve each one before any email goes out.</span>
               {run && (
                 <div className="small muted">
-                  Last run: "{run.query}" · {run.candidatesFound} page{run.candidatesFound === 1 ? "" : "s"} considered · {run.finishedAt ? `finished ${ago(run.finishedAt)}` : `started ${ago(run.startedAt)}`}
+                  Last run: "{run.query}" · {run.candidatesFound} candidate{run.candidatesFound === 1 ? "" : "s"} · {run.finishedAt ? `finished ${ago(run.finishedAt)}` : `started ${ago(run.startedAt)}`}
                   {run.error && <div className="callout" style={{ marginTop: 8 }}>{run.error}</div>}
                 </div>
               )}
@@ -77,20 +79,20 @@ export default function Suppliers() {
                           {editing === c._id ? (
                             <span className="row">
                               <input className="input" style={{ width: 200 }} value={editEmail} onChange={(e) => setEditEmail(e.target.value)} placeholder="sales@supplier.com" />
-                              <button className="btn sm" onClick={async () => { try { await edit({ supplierId: c._id, email: editEmail }); setEditing(null); } catch (err) { fail(err); } }}>Save</button>
+                              <button type="button" className="btn sm" onClick={async () => { try { await edit({ supplierId: c._id, email: editEmail }); setEditing(null); } catch (err) { fail(err); } }}>Save</button>
                             </span>
                           ) : (
                             <span className="row">
                               <span className="mono small">{c.email ?? <span className="muted">not found</span>}</span>
-                              <button className="btn ghost sm" onClick={() => { setEditing(c._id); setEditEmail(c.email ?? ""); }}>edit</button>
+                              <button type="button" className="btn ghost sm" onClick={() => { setEditing(c._id); setEditEmail(c.email ?? ""); }}>edit</button>
                             </span>
                           )}
                         </td>
                         <td className="small muted">{c.notes}</td>
                         <td>
                           <span className="row" style={{ flexWrap: "nowrap" }}>
-                            <button className="btn sm" disabled={!c.email} title={c.email ? "" : "Add an email first"} onClick={async () => { try { await review({ supplierId: c._id, decision: "accepted" }); } catch (err) { fail(err); } }}>Accept</button>
-                            <button className="btn ghost sm" onClick={async () => { try { await review({ supplierId: c._id, decision: "rejected" }); } catch (err) { fail(err); } }}>Reject</button>
+                            <button type="button" className="btn sm" disabled={!c.email} title={c.email ? "" : "Add an email first"} onClick={async () => { try { await review({ supplierId: c._id, decision: "accepted" }); } catch (err) { fail(err); } }}>Accept</button>
+                            <button type="button" className="btn ghost sm" onClick={async () => { try { await review({ supplierId: c._id, decision: "rejected" }); } catch (err) { fail(err); } }}>Reject</button>
                           </span>
                         </td>
                       </tr>
@@ -119,11 +121,11 @@ export default function Suppliers() {
                       <td>
                         <span className="row" style={{ flexWrap: "nowrap" }}>
                           <input className="input" style={{ width: 220 }} placeholder="https://supplier.com/price-list" value={trackUrl[s._id] ?? ""} onChange={(e) => setTrackUrl({ ...trackUrl, [s._id]: e.target.value })} />
-                          <button className="btn sm secondary" disabled={!trackUrl[s._id]} onClick={async () => { try { await track({ supplierId: s._id, url: trackUrl[s._id] }); setTrackUrl({ ...trackUrl, [s._id]: "" }); push("Page queued for a price crawl.", "ok"); } catch (err) { fail(err); } }}>Track</button>
+                          <button type="button" className="btn sm secondary" disabled={!trackUrl[s._id]} onClick={async () => { try { await track({ supplierId: s._id, url: trackUrl[s._id] }); setTrackUrl({ ...trackUrl, [s._id]: "" }); push("Page queued for a price crawl.", "ok"); } catch (err) { fail(err); } }}>Track</button>
                         </span>
                       </td>
                       <td>
-                        <button className="btn ghost sm" onClick={async () => { try { await remove({ supplierId: s._id }); } catch (err) { fail(err); } }}>Remove</button>
+                        <button type="button" className="btn ghost sm" onClick={async () => { try { await remove({ supplierId: s._id }); } catch (err) { fail(err); } }}>Remove</button>
                       </td>
                     </tr>
                   ))}
@@ -137,7 +139,7 @@ export default function Suppliers() {
               <summary className="small muted" style={{ cursor: "pointer" }}>{rejected.length} rejected</summary>
               <ul className="small" style={{ margin: "8px 0 0", paddingLeft: 18 }}>
                 {rejected.map((s) => (
-                  <li key={s._id}>{s.name} <button className="btn ghost sm" onClick={async () => { try { await review({ supplierId: s._id, decision: "accepted" }); } catch (err) { fail(err); } }}>restore</button></li>
+                  <li key={s._id}>{s.name} <button type="button" className="btn ghost sm" onClick={async () => { try { await review({ supplierId: s._id, decision: "accepted" }); } catch (err) { fail(err); } }}>restore</button></li>
                 ))}
               </ul>
             </details>

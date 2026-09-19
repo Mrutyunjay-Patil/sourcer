@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
 import { Empty, Loading, PageHead } from "../components/Shell";
 import { money, until, when } from "../lib/format";
+import { useClock } from "../lib/useClock";
 
 export default function Dashboard() {
   const rfqs = useQuery(api.rfqs.list);
   const navigate = useNavigate();
+  useClock(15000);
   if (rfqs === undefined) return <><PageHead eyebrow="Requests" title="Quote requests" /><Loading /></>;
   const open = rfqs.filter((r) => r.status === "open" || r.status === "sending");
   const drafts = rfqs.filter((r) => r.status === "draft");
