@@ -12,16 +12,20 @@
   },
   "dependencies": {
     "@agentmail/convex": "^0.1.0",
+    "@auth/core": "^0.41.3",
+    "@convex-dev/auth": "^0.0.95",
     "@convex-dev/static-hosting": "^0.2.1",
     "@convex-dev/workflow": "^0.4.8",
     "@convex-dev/workpool": "^0.4.12",
     "@firecrawl/firecrawl-convex": "^0.1.1",
     "@rolldown/binding-win32-x64-msvc": "^1.2.9",
+    "agentmail": "^0.5.27",
     "convex": "^1.46.0",
     "lightningcss-win32-x64-msvc": "^1.33.0",
     "openai": "^7.19.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "unpdf": "^1.8.1"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
