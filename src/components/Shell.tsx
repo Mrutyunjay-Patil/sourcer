@@ -54,6 +54,7 @@ export function Shell({ business, children }: { business: Business; children: Re
           {usage && (
             <div className="tiny">AI today: <span className="num">{usage.requests}</span>/<span className="num">{usage.requestLimit}</span> calls</div>
           )}
+          {business.isDemo && <ResetDemo />}
           <button className="btn ghost sm" style={{ justifySelf: "start", padding: "4px 0" }} onClick={() => void signOut()}>
             Sign out
           </button>
@@ -64,6 +65,26 @@ export function Shell({ business, children }: { business: Business; children: Re
         {children}
       </main>
     </div>
+  );
+}
+
+function ResetDemo() {
+  const reset = useMutation(api.demoData.resetMine);
+  const navigate = useNavigate();
+  return (
+    <button
+      type="button"
+      className="btn ghost sm"
+      style={{ justifySelf: "start", padding: "4px 0", color: "var(--tomato)" }}
+      title="Wipe requests, quotes and orders; keep suppliers and price history"
+      onClick={async () => {
+        if (!window.confirm("Reset the demo kitchen? Requests, quotes and orders are wiped. Suppliers and price history stay.")) return;
+        await reset();
+        navigate("/");
+      }}
+    >
+      Reset demo
+    </button>
   );
 }
 

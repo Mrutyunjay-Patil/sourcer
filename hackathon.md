@@ -12,7 +12,7 @@
 - **AI models:** openai/gpt-oss-120b (OpenAI open-weight model served through Cloudflare Workers AI via the OpenAI SDK; base URL and model are env vars so api.openai.com is a one-line switch)
 - **Auth:** Convex Auth
 - **Started:** 2026-09-19T14:59:33Z
-- **Last updated:** 2026-09-19T20:40:00Z
+- **Last updated:** 2026-09-19T21:00:00Z
 
 ## The pitch
 
@@ -24,7 +24,7 @@ the moment it lands, ranks the quotes with a written reason, and sends the
 purchase order back in the same thread.
 
 - Live app: https://careful-capybara-546.convex.site
-- Demo video: (added at submission)
+- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (92 seconds, captioned); YouTube link added at submission
 - Repo: https://github.com/Mrutyunjay-Patil/sourcer
 
 ### Judge access
@@ -186,3 +186,16 @@ Bugs found and fixed by that run:
   retryable message and the demo seed reuses existing inboxes.
 Production: judge account created, demo kitchen seeded, sourcing inbox
 attached, dev webhook removed so production owns inbox events.
+
+### 2026-09-20 - working tree
+Production verification with the judge account: the full flow ran under
+Playwright against the live site in 93 seconds (note to line items, eggs
+question, AI draft, send to two real supplier inboxes, two replies landing
+through the webhook, parse, rank, purchase order sent) and the recording is
+the demo video (`docs/demo/sourcer-demo.mp4`, recorder in
+`docs/demo/record.mjs`). Separately verified on production: the purchase
+order now arrives in the supplier's inbox, and a silent supplier received
+exactly one follow-up nudge two minutes after the RFQ while the supplier
+who had replied received none. Added a one-click demo reset for demo
+accounts (`src/components/Shell.tsx`, `convex/demoData.ts`). Deployed
+build shows no console errors on the request, prices and orders screens.
