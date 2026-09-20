@@ -4,6 +4,7 @@ import staticHosting from "@convex-dev/static-hosting/convex.config";
 import agentmail from "@agentmail/convex/convex.config";
 import firecrawl from "@firecrawl/firecrawl-convex/convex.config";
 import workflow from "@convex-dev/workflow/convex.config";
+import rateLimiter from "@convex-dev/rate-limiter/convex.config";
 
 // App-owned root routing: convex/http.ts keeps auth discovery routes and the
 // sponsor webhooks at the root of the convex.site domain, and registers the
@@ -37,5 +38,6 @@ app.use(firecrawl, {
   },
 });
 app.use(workflow);
+app.use(rateLimiter);
 
 export default app;

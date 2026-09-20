@@ -246,9 +246,27 @@ function Timeline({ rfq, suppliers }: { rfq: Board["rfq"]; suppliers: SupplierRo
   );
 }
 
+function Conversation({ threadId }: { threadId: string }) {
+  const messages = useQuery(api.email.threadMessages, { threadId });
+  if (messages === undefined) return <div className="skeleton" />;
+  if (messages.length === 0) return <p className="small muted">No inbound messages stored for this thread yet.</p>;
+  return (
+    <div className="stack" style={{ gap: 8 }}>
+      <div className="tiny muted">Inbound messages as stored by the AgentMail component, newest last.</div>
+      {messages.map((m) => (
+        <div key={String(m.messageId)} className="email-body" style={{ maxHeight: 220 }}>
+          <div className="tiny muted" style={{ marginBottom: 6 }}>{String(m.from ?? "")} · {when(Number(m.receivedAt) || undefined)}</div>
+          {m.text.slice(0, 2500)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function QuoteCard({ s, rfq, lineItems, landed, best }: { s: SupplierRow; rfq: Board["rfq"]; lineItems: Board["lineItems"]; landed: boolean; best: boolean }) {
   const q = s.quote!;
   const [showRaw, setShowRaw] = useState(false);
+  const [showThread, setShowThread] = useState(false);
   const [reviewing, setReviewing] = useState(false);
   const reparse = useMutation(api.quotes.reparse);
   const { fail } = useToast();
@@ -299,9 +317,11 @@ function QuoteCard({ s, rfq, lineItems, landed, best }: { s: SupplierRow; rfq: B
           <div className="row">
             {(q.parseStatus === "needs_review" || q.parseStatus === "failed") && <button className="btn sm" onClick={() => setReviewing(true)}>Review and confirm</button>}
             <button className="btn ghost sm" onClick={() => setShowRaw(!showRaw)}>{showRaw ? "Hide" : "Show"} original reply</button>
+            {s.threadId && <button className="btn ghost sm" onClick={() => setShowThread(!showThread)}>{showThread ? "Hide" : "Show"} conversation</button>}
             <button className="btn ghost sm" onClick={async () => { try { await reparse({ quoteId: q._id }); } catch (err) { fail(err); } }}>Re-read</button>
           </div>
           {showRaw && <div className="email-body">{q.rawText}</div>}
+          {showThread && s.threadId && <Conversation threadId={s.threadId} />}
           {reviewing && <ReviewForm quoteId={q._id} lines={q.lines} lineItems={lineItems} deliveryFee={q.deliveryFee} currency={rfq.currency} onDone={() => setReviewing(false)} />}
         </>
       )}

@@ -1,14 +1,18 @@
+/// <reference types="vite/client" />
 // @vitest-environment edge-runtime
 import { convexTest } from "convex-test";
 import { beforeEach, describe, expect, it } from "vitest";
 import { api, internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import schema from "../schema";
+import rateLimiterSchema from "../../node_modules/@convex-dev/rate-limiter/src/component/schema";
 
 const modules = import.meta.glob("../**/*.*s");
+const rateLimiterModules = import.meta.glob("../../node_modules/@convex-dev/rate-limiter/src/component/**/*.ts");
 
 async function seed() {
   const t = convexTest(schema, modules);
+  t.registerComponent("rateLimiter", rateLimiterSchema, rateLimiterModules);
   const ids = await t.run(async (ctx) => {
     const u1 = await ctx.db.insert("users", { email: "owner1@shop.test", name: "Owner One" });
     const u2 = await ctx.db.insert("users", { email: "owner2@shop.test", name: "Owner Two" });
@@ -189,12 +193,20 @@ describe("ranking and purchase orders", () => {
   });
 });
 
-describe("AI spend guard", () => {
-  beforeEach(() => { process.env.AI_DAILY_REQUEST_LIMIT = "2"; });
-  it("stops at the daily request ceiling with a readable message", async () => {
+describe("AI spend guard (rate-limiter component)", () => {
+  beforeEach(() => { process.env.AI_DAILY_REQUEST_LIMIT = "2"; process.env.AI_DAILY_TOKEN_LIMIT = "1000"; });
+  it("stops at the daily request ceiling with a readable message, per business", async () => {
+    const { t, b1, b2 } = await seed();
+    await t.mutation(internal.usage.reserve, { businessId: b1, purpose: "parseRequest" });
+    await t.mutation(internal.usage.reserve, { businessId: b1, purpose: "parseRequest" });
+    await expect(t.mutation(internal.usage.reserve, { businessId: b1, purpose: "parseRequest" })).rejects.toThrow(/Daily AI request budget reached/);
+    // Another tenant still has its own budget.
+    await t.mutation(internal.usage.reserve, { businessId: b2, purpose: "parseRequest" });
+  });
+  it("settles tokens and blocks once the token budget is spent", async () => {
     const { t, b1 } = await seed();
-    await t.mutation(internal.usage.reserve, { businessId: b1, purpose: "parseRequest" });
-    await t.mutation(internal.usage.reserve, { businessId: b1, purpose: "parseRequest" });
-    await expect(t.mutation(internal.usage.reserve, { businessId: b1, purpose: "parseRequest" })).rejects.toThrow(/Daily AI budget reached/);
+    await t.mutation(internal.usage.reserve, { businessId: b1, purpose: "draftRfq" });
+    await t.mutation(internal.usage.record, { businessId: b1, inputTokens: 900, outputTokens: 400 });
+    await expect(t.mutation(internal.usage.reserve, { businessId: b1, purpose: "draftRfq" })).rejects.toThrow(/token budget/);
   });
 });

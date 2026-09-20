@@ -270,6 +270,24 @@ export default defineSchema({
     .index("by_supplier", ["supplierId"])
     .index("by_business_url", ["businessId", "url"]),
 
+  // Durable Firecrawl crawls of a supplier's site, tracked by the component.
+  siteCrawls: defineTable({
+    businessId: v.id("businesses"),
+    supplierId: v.id("suppliers"),
+    url: v.string(),
+    crawlId: v.optional(v.string()),
+    status: v.union(v.literal("starting"), v.literal("crawling"), v.literal("extracting"), v.literal("done"), v.literal("failed")),
+    pagesSeen: v.number(),
+    pagesWithPrices: v.number(),
+    pricesFound: v.number(),
+    error: v.optional(v.string()),
+    startedAt: v.number(),
+    finishedAt: v.optional(v.number()),
+  })
+    .index("by_business", ["businessId"])
+    .index("by_supplier", ["supplierId"])
+    .index("by_crawl", ["crawlId"]),
+
   discoveryRuns: defineTable({
     businessId: v.id("businesses"),
     query: v.string(),

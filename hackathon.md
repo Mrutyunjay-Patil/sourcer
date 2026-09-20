@@ -7,7 +7,7 @@
 - **Repo:** https://github.com/Mrutyunjay-Patil/sourcer
 - **Frontend:** Convex static hosting
 - **Convex deployment:** https://careful-capybara-546.convex.cloud
-- **Components:** @convex-dev/static-hosting, @agentmail/convex, @firecrawl/firecrawl-convex, @convex-dev/workflow
+- **Components:** @convex-dev/static-hosting, @agentmail/convex, @firecrawl/firecrawl-convex, @convex-dev/workflow, @convex-dev/rate-limiter
 - **Convex features:** schema, indexes, queries, mutations, actions, Node actions, scheduled functions, crons, file storage, HTTP actions, components, durable workflows
 - **AI models:** openai/gpt-oss-120b (OpenAI open-weight model served through Cloudflare Workers AI via the OpenAI SDK; base URL and model are env vars so api.openai.com is a one-line switch)
 - **Auth:** Convex Auth
@@ -43,8 +43,10 @@ purchase order back in the same thread.
 ### How each sponsor does real work
 
 - **Firecrawl** runs the supplier discovery search and scrapes candidate
-  pages so OpenAI can keep only real wholesalers; it also scrapes tracked
-  price pages on a weekly cron for the price watch (`convex/discovery.ts`,
+  pages so OpenAI can keep only real wholesalers; it scrapes tracked price
+  pages on a weekly cron; and its durable crawl walks a supplier's whole
+  site with pages streaming into Convex and progress shown live, every
+  priced page becoming a tracked page (`convex/discovery.ts`,
   `convex/pricing.ts`).
 - **AgentMail** gives each business its own inbox; RFQs, follow-up nudges
   and purchase orders go out through the component's durable sender, and
@@ -57,8 +59,11 @@ purchase order back in the same thread.
 
 ### Convex primitives and why
 
-- Reactive queries: the quote board, supplier statuses and ranking update
-  the instant a webhook mutation commits.
+- Reactive queries: the quote board, supplier statuses, ranking and crawl
+  progress update the instant a mutation commits.
+- Rate-limiter component: the per-business daily AI request and token
+  budgets, discovery and site-crawl throttles are transactional limits, not
+  a hand-rolled counter (`convex/lib/limits.ts`, `convex/usage.ts`).
 - Mutations with tenant scoping resolved from auth, never from client input
   (`convex/lib/access.ts`).
 - Convex Auth (password) for sign in and the judge demo account.
@@ -244,3 +249,16 @@ and purchase-order override rules against the real schema (38 tests,
 `npm test`). A Playwright smoke test signs in to the deployed app and checks
 every page at phone, tablet and desktop widths for overflow and console
 errors (`npm run test:e2e`), passing on production.
+
+### 2026-09-20 - working tree (lean on components)
+Audit of what was custom where a component exists. Replaced the hand-rolled
+AI spend counter with the rate-limiter component (fixed-window request and
+token budgets per business, plus token-bucket throttles for discovery and
+site crawls). Added Firecrawl's durable crawl: "Crawl site" on a supplier
+starts a component-tracked crawl, pages land in Convex as they arrive,
+progress and credits used are a reactive query, and OpenAI extracts prices
+only from pages that mention a price; every priced page becomes a tracked
+page for the weekly cron. The quote card now shows the actual email
+conversation from the AgentMail component's stored inbound messages.
+The AI Budget component was evaluated and skipped for now: its published
+alpha has no metering hook for direct provider calls.

@@ -17,6 +17,8 @@ export default function Suppliers() {
   const remove = useMutation(api.suppliers.remove);
   const startDiscovery = useMutation(api.discovery.start);
   const track = useMutation(api.pricing.track);
+  const crawlSite = useMutation(api.pricing.crawlSite);
+  const crawls = useQuery(api.pricing.siteCrawls) ?? [];
   const { fail, push } = useToast();
   useClock(5000);
   const [form, setForm] = useState({ name: "", email: "", website: "" });
@@ -125,7 +127,10 @@ export default function Suppliers() {
                         </span>
                       </td>
                       <td>
-                        <button type="button" className="btn ghost sm" onClick={async () => { try { await remove({ supplierId: s._id }); } catch (err) { fail(err); } }}>Remove</button>
+                        <span className="row" style={{ flexWrap: "nowrap" }}>
+                          <button type="button" className="btn ghost sm" disabled={!s.website} title={s.website ? "Firecrawl crawls the site and pulls prices from any page that has them" : "Add a website first"} onClick={async () => { try { await crawlSite({ supplierId: s._id }); push("Firecrawl is crawling the site. Progress shows below.", "ok"); } catch (err) { fail(err); } }}>Crawl site</button>
+                          <button type="button" className="btn ghost sm" onClick={async () => { try { await remove({ supplierId: s._id }); } catch (err) { fail(err); } }}>Remove</button>
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -133,6 +138,34 @@ export default function Suppliers() {
               </table>
             )}
           </div>
+
+          {crawls.length > 0 && (
+            <div className="card">
+              <div className="card-head"><h3>Site crawls</h3><span className="muted small">durable Firecrawl crawls, live from the component</span></div>
+              <table className="ledger">
+                <thead><tr><th>Site</th><th>Status</th><th className="num">Pages</th><th className="num">Priced pages</th><th className="num">Prices</th></tr></thead>
+                <tbody>
+                  {crawls.map((c) => {
+                    const supplier = suppliers.find((s) => s._id === c.supplierId);
+                    const live = c.status === "starting" || c.status === "crawling" || c.status === "extracting";
+                    return (
+                      <tr key={c._id}>
+                        <td><strong>{supplier?.name ?? "Supplier"}</strong><div className="tiny"><a href={c.url} target="_blank" rel="noreferrer">{c.url}</a></div></td>
+                        <td>
+                          <span className={`pill ${c.status === "done" ? "parsed" : c.status === "failed" ? "failed" : "sending"}`}>{live && <span className="dot live" />}{c.status}</span>
+                          {c.error && <div className="tiny" style={{ color: "var(--tomato)" }}>{c.error}</div>}
+                          {c.creditsUsed !== null && <div className="tiny muted">{c.creditsUsed} Firecrawl credits</div>}
+                        </td>
+                        <td className="num">{c.pagesStored}{c.pagesTotal ? ` / ${c.pagesTotal}` : ""}</td>
+                        <td className="num">{c.pagesWithPrices}</td>
+                        <td className="num">{c.pricesFound}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {rejected.length > 0 && (
             <details className="card card-pad">

@@ -19,6 +19,7 @@ import type * as discovery from "../discovery.js";
 import type * as email from "../email.js";
 import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
+import type * as lib_limits from "../lib/limits.js";
 import type * as lib_llm from "../lib/llm.js";
 import type * as notify from "../notify.js";
 import type * as pricing from "../pricing.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   email: typeof email;
   http: typeof http;
   "lib/access": typeof lib_access;
+  "lib/limits": typeof lib_limits;
   "lib/llm": typeof lib_llm;
   notify: typeof notify;
   pricing: typeof pricing;
@@ -91,4 +93,5 @@ export declare const components: {
   agentmail: import("@agentmail/convex/_generated/component.js").ComponentApi<"agentmail">;
   firecrawl: import("@firecrawl/firecrawl-convex/_generated/component.js").ComponentApi<"firecrawl">;
   workflow: import("@convex-dev/workflow/_generated/component.js").ComponentApi<"workflow">;
+  rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
 };

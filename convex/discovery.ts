@@ -4,6 +4,7 @@ import { components, internal } from "./_generated/api";
 import { action, internalAction, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { domainOf, requireBusiness } from "./lib/access";
+import { rateLimiter } from "./lib/limits";
 import type { Doc } from "./_generated/dataModel";
 import type { SupplierCandidate } from "./ai";
 
@@ -27,6 +28,11 @@ export const start = mutation({
       .first();
     if (running && Date.now() - running.startedAt < 3 * 60_000) {
       throw new ConvexError("A discovery run is already in progress.");
+    }
+    // Firecrawl credits are finite; the rate-limiter component meters runs per business.
+    const gate = await rateLimiter.limit(ctx, "discovery", { key: business._id });
+    if (!gate.ok) {
+      throw new ConvexError(`Discovery is rate limited. Try again in ${Math.ceil(gate.retryAfter / 1000)} seconds.`);
     }
     const query = (extra?.trim() || `${cleaned.join(", ")} wholesale supplier ${business.city}`).slice(0, 200);
     const runId = await ctx.db.insert("discoveryRuns", {
