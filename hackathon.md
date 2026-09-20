@@ -24,7 +24,7 @@ the moment it lands, ranks the quotes with a written reason, and sends the
 purchase order back in the same thread.
 
 - Live app: https://careful-capybara-546.convex.site
-- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:54, animated intro plus live walkthrough); YouTube link added at submission
+- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:58, animated intro, Firecrawl discovery and price watch, then the live email flow); YouTube link added at submission
 - Repo: https://github.com/Mrutyunjay-Patil/sourcer
 
 ### Judge access
@@ -207,3 +207,9 @@ walkthrough on production with a visible cursor and no subtitles, cut to
 2:54 total (`docs/demo/intro/`, `docs/demo/record.mjs`,
 `docs/demo/sourcer-demo.mp4`). Voice-over script with timestamps for the
 owner to record is in `docs/demo/voiceover.md`.
+
+### 2026-09-20 - working tree (video, second pass)
+Added a Firecrawl segment to the video: supplier discovery returning three
+Bengaluru wholesalers with reasons, and the price watch showing a tracked
+IndiaMART page scraped into eight catalog prices (`docs/demo/record-firecrawl.mjs`,
+`docs/demo/splice.py`). Fixed the intro artwork and re-timed the voice-over.

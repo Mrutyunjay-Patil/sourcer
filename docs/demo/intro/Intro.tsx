@@ -107,12 +107,13 @@ const Shop: React.FC = () => {
       ))}
       {/* sacks */}
       <g style={{ opacity: shutter }}>
-        <ellipse cx="120" cy="385" rx="42" ry="22" fill={C.amber} />
-        <ellipse cx="120" cy="370" rx="36" ry="14" fill="#c98a2c" />
-        <ellipse cx="520" cy="385" rx="42" ry="22" fill="#b5a06d" />
-        <ellipse cx="520" cy="370" rx="36" ry="14" fill="#c9b47e" />
-        <text x="120" y="392" textAnchor="middle" fontFamily={mono} fontSize="12" fill={C.paper}>RICE 25kg</text>
-        <text x="520" y="392" textAnchor="middle" fontFamily={mono} fontSize="12" fill={C.ink}>ATTA 10kg</text>
+        {/* sacks stand on the floor line at y=392 */}
+        <ellipse cx="120" cy="372" rx="42" ry="20" fill={C.amber} />
+        <ellipse cx="120" cy="358" rx="36" ry="13" fill="#c98a2c" />
+        <ellipse cx="520" cy="372" rx="42" ry="20" fill="#b5a06d" />
+        <ellipse cx="520" cy="358" rx="36" ry="13" fill="#c9b47e" />
+        <text x="120" y="380" textAnchor="middle" fontFamily={mono} fontSize="12" fill={C.paper}>RICE 25kg</text>
+        <text x="520" y="380" textAnchor="middle" fontFamily={mono} fontSize="12" fill={C.ink}>ATTA 10kg</text>
       </g>
       {/* ground */}
       <rect x="0" y="392" width="640" height="10" fill={C.line} />
