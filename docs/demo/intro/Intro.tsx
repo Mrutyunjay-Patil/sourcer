@@ -129,10 +129,10 @@ const SceneShop: React.FC = () => {
       <div style={{ position: "absolute", left: 90, top: 120, width: 640 }}>
         <Eyebrow style={{ ...useRise(4) }}>Where this started</Eyebrow>
         <div style={{ fontFamily: serif, fontSize: 64, lineHeight: 1.05, fontWeight: 600, marginTop: 18, ...a }}>
-          My family runs a small provision shop back home.
+          My mother runs a small provision shop back home.
         </div>
         <div style={{ fontSize: 26, color: C.soft, marginTop: 26, maxWidth: 560, lineHeight: 1.4, ...b }}>
-          Rice, oil, sugar, tea, atta. The same twenty things, every single week.
+          Rice, oil, sugar, tea, atta. The same things, every couple of days.
         </div>
       </div>
       <div style={{ position: "absolute", right: 90, top: 240 }}>
@@ -163,12 +163,12 @@ const SceneList: React.FC = () => {
   return (
     <Paper>
       <div style={{ position: "absolute", left: 90, top: 100, width: 620 }}>
-        <Eyebrow>Every Thursday</Eyebrow>
+        <Eyebrow>Every couple of days</Eyebrow>
         <div style={{ fontFamily: serif, fontSize: 60, lineHeight: 1.05, fontWeight: 600, marginTop: 16, ...title }}>
-          The reorder list is easy.
+          Writing the list takes two minutes.
         </div>
         <div style={{ fontSize: 26, color: C.soft, marginTop: 24, lineHeight: 1.4, ...useRise(30) }}>
-          It is written in two minutes on the back of a bill.
+          She keeps the inventory properly, so this part is quick.
         </div>
       </div>
       <div
@@ -289,7 +289,7 @@ const SceneChaos: React.FC = () => {
       <div style={{ position: "absolute", left: 90, top: 90, width: 900 }}>
         <Eyebrow>Getting the prices is not</Eyebrow>
         <div style={{ fontFamily: serif, fontSize: 56, lineHeight: 1.05, fontWeight: 600, marginTop: 14, ...title }}>
-          Three suppliers. Three phones. One whole morning.
+          Getting the prices eats the whole morning.
         </div>
       </div>
       <Clock />
@@ -338,9 +338,9 @@ const SceneChaos: React.FC = () => {
           ...punch,
         }}
       >
-        Nothing is comparable.
+        And again in two days.
         <div style={{ fontFamily: sans, fontSize: 22, color: C.soft, marginTop: 18, lineHeight: 1.45 }}>
-          Prices arrive as calls, voice notes and photos. Nobody knows who was cheapest last week, or whether the rate just went up.
+          Call back after four. A voice note. A photo of last month's list. A dozen follow-ups, every restock.
         </div>
       </div>
       <div style={{ position: "absolute", left: 90, bottom: 40, fontSize: 20, color: C.mute, opacity: interpolate(frame, [220, 250], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) }}>
@@ -364,9 +364,9 @@ const SceneWhatIf: React.FC = () => {
   return (
     <Paper dark>
       <div style={{ position: "absolute", left: 100, top: 110, width: 760 }}>
-        <Eyebrow light>What if</Eyebrow>
+        <Eyebrow light>The real problem is the repetition</Eyebrow>
         <div style={{ fontFamily: serif, fontSize: 60, lineHeight: 1.05, fontWeight: 600, marginTop: 16, ...a }}>
-          The shop just typed the list, and everything else happened by email.
+          Type the list once. Let the scraping and the emailing happen on their own.
         </div>
       </div>
       <div
@@ -433,7 +433,7 @@ const SceneTitle: React.FC = () => {
             ))}
           </div>
           <div style={{ fontSize: 20, color: C.mute, marginTop: 30, opacity: interpolate(frame, [80, 100], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) }}>
-            Convex All Gas Hackathon · built and tested end to end on real email
+            Built for the Convex All Gas Hackathon · runs on real email
           </div>
         </div>
       </div>
@@ -447,12 +447,14 @@ const SceneTitle: React.FC = () => {
 
 // Scene lengths follow the recorded narration (transitions overlap 0.6s each).
 export const SCENES = {
-  shop: Math.round(8.0 * 30),
-  list: Math.round(8.4 * 30),
-  chaos: Math.round(14.2 * 30),
-  whatIf: Math.round(13.8 * 30),
-  title: Math.round(6.5 * 30),
+  shop: Math.round(6.8 * 30),
+  list: Math.round(6.5 * 30),
+  chaos: Math.round(17.7 * 30),
+  whatIf: Math.round(8.8 * 30),
+  title: Math.round(5.4 * 30),
 };
+export const OUTRO_FRAMES = Math.round(6.5 * 30);
+export const Outro: React.FC = () => <SceneTitle />;
 const T = 18;
 export const INTRO_FRAMES = SCENES.shop + SCENES.list + SCENES.chaos + SCENES.whatIf + SCENES.title - 4 * T;
 

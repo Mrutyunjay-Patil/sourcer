@@ -24,7 +24,7 @@ the moment it lands, ranks the quotes with a written reason, and sends the
 purchase order back in the same thread.
 
 - Live app: https://careful-capybara-546.convex.site
-- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:52 with the owner's narration; animated intro, then one fresh live run on production cut to the narration); YouTube link added at submission
+- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:56, owner's narration; animated intro on the family shop, then one fresh live run on production cut sentence by sentence to the narration); YouTube link added at submission
 - Repo: https://github.com/Mrutyunjay-Patil/sourcer
 
 ### Judge access
@@ -224,3 +224,12 @@ replies, ranking, purchase order), and cut each screen change to the line
 that describes it (`docs/demo/assemble.py`, `docs/demo/beats.json`). Fixed
 the Supplier book layout where the add-supplier card overlapped the tables
 at wide viewports (`src/index.css`, `src/pages/Suppliers.tsx`).
+
+### 2026-09-20 - working tree (video, narration rewrite)
+Rewrote the narration in the owner's own words (the shop is his mother's,
+the problem is the repeated chasing every restock), re-timed the Remotion
+intro and added an outro title card to the new audio, and re-cut the fresh
+production run so each sentence has its own screen for exactly as long as
+it is spoken, with cut points placed from the actual footage rather than
+script marks (`docs/demo/assemble.py`, `docs/demo/beats.json`,
+`docs/demo/voiceover.md`).

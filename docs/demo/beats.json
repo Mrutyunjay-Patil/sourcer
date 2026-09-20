@@ -1,97 +1,101 @@
 {
  "beats": [
   {
-   "key": "intro.shop",
-   "t": 1.18
+   "key": "shop",
+   "t": 0.0
   },
   {
-   "key": "intro.list",
-   "t": 7.42
+   "key": "list",
+   "t": 6.22
   },
   {
-   "key": "intro.chaos",
-   "t": 15.22
+   "key": "chaos",
+   "t": 12.14
   },
   {
-   "key": "intro.whatif",
-   "t": 28.8
+   "key": "whatif",
+   "t": 29.16
   },
   {
-   "key": "intro.title",
-   "t": 42.0
+   "key": "title",
+   "t": 37.44
   },
   {
    "key": "dashboard",
-   "t": 49.4
+   "t": 42.78
   },
   {
    "key": "suppliers",
-   "t": 55.74
+   "t": 48.32
   },
   {
    "key": "candidates",
-   "t": 62.6
+   "t": 56.54
+  },
+  {
+   "key": "track",
+   "t": 66.2
   },
   {
    "key": "pricewatch",
-   "t": 70.94
+   "t": 72.58
   },
   {
    "key": "newrequest",
-   "t": 80.78
+   "t": 79.3
   },
   {
    "key": "lineitems",
-   "t": 86.24
+   "t": 83.0
   },
   {
    "key": "replyby",
-   "t": 93.32
+   "t": 91.72
   },
   {
    "key": "draft",
-   "t": 99.34
+   "t": 99.32
   },
   {
    "key": "send",
-   "t": 107.72
+   "t": 105.84
   },
   {
    "key": "greenleaf",
-   "t": 113.28
+   "t": 113.03999999999999
   },
   {
    "key": "landed",
-   "t": 122.76
+   "t": 117.56
   },
   {
    "key": "nandini",
-   "t": 134.12
+   "t": 129.06
   },
   {
    "key": "rank",
-   "t": null
+   "t": 142.7
   },
   {
    "key": "po",
-   "t": 151.34
+   "t": 149.44
   },
   {
    "key": "posend",
-   "t": 157.24
+   "t": 157.0
   },
   {
    "key": "orders",
-   "t": 161.02
+   "t": 162.12
+  },
+  {
+   "key": "outro",
+   "t": 163.24
   },
   {
    "key": "close",
-   "t": 165.76
-  },
-  {
-   "key": "thanks",
-   "t": 170.34
+   "t": 171.3
   }
  ],
- "end": 171.3
+ "end": 175.9
 }

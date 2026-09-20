@@ -1,38 +1,30 @@
-# Narration transcript with timestamps
+# Narration and shot list
 
-Transcribed from your recording (2:51). These are the actual times in the audio, and the video is cut so each screen change lands on the line that describes it.
+Final narration (2:56), transcribed with word timestamps. The video is cut so each screen starts on the first word of its sentence.
 
-| Start | End | On screen | You say |
+| Start | End | On screen | Narration |
 | --- | --- | --- | --- |
-| 0:01.2 | 0:07.4 | Animated shopfront, shutter rolls up | My family runs a small provision shop back home. I grew up behind that counter. |
-| 0:07.4 | 0:15.2 | Weekly list writes itself | Every Thursday, the same list gets written on the back of a bill. Rice, oil, sugar, tea. That part takes two minutes. |
-| 0:15.2 | 0:28.8 | Three phones, voice note, photo of price list, clock | Getting the prices takes the whole morning. One supplier says call me after four. One sends a voice note. One sends a photo of last month's list. Nothing lines up. Nobody knows who's actually cheapest. |
-| 0:28.8 | 0:42.0 | Dark screen: list types itself, five steps | So I built the thing I wished we had. You type the list. Sorcer finds suppliers, emails them, reads every reply, ranks the quotes, sends the order. All by email. All live. |
-| 0:42.0 | 0:49.4 | Sourcer title card with the four logos | This is Sorcer, built on Convex for the all -gas hackathon. Everything you're about to see is real. |
-| 0:49.4 | 0:55.7 | Sign-in done, empty dashboard | This is the demo kitchen. Chai Corner Cafe. First problem? Who do we even ask? |
-| 0:55.7 | 1:02.6 | Suppliers page, items typed, Find suppliers clicked, Firecrawl searching | I type what I need, and Firecrawl searches the web near Bengaluru, scrapes the candidate pages. |
-| 1:02.6 | 1:10.9 | Three candidates with reasons, Accept / Reject | OpenAI keeps only real wholesalers, tells me why. Nothing's emailed until I accept a supplier, so I stay in control. |
-| 1:10.9 | 1:20.8 | Price page tracked, Price watch shows it crawled and priced | Firecrawl also watches supplier price pages every week. That Indiamark page gave us eight paneer prices, so the shop sees when a rate moves. |
-| 1:20.8 | 1:26.2 | New request, note typed | Now the order. I type it the way I would text it to myself. No forms. |
-| 1:26.2 | 1:33.3 | Line item chips, eggs flagged and set to 5 dozen | OpenAI turns it into line items. Eggs had no quantity, so it asks instead of guessing. Five dozen. |
-| 1:33.3 | 1:39.3 | Reply-by time and nudge set, request created | I set when suppliers must reply by. The request closes, ranks itself at that time. |
-| 1:39.3 | 1:47.7 | AI-drafted email, scrolled | The quote request is drafted in my voice, with the items, the delivery window, the reply by date. I can edit any of it before it goes out. |
-| 1:47.7 | 1:53.3 | Send to 2 clicked, rows flip to sent | Two suppliers, two separate agent mail threads. Each one is a real inbox. |
-| 1:53.3 | 2:02.8 | Reply as Greenleaf clicked | Greenleaf's inbox is now replying to that email. This is not a mock. The reply goes through agent mail and hits a signed webhook on Convex. |
-| 2:02.8 | 2:14.1 | Quote card lands and parses; prices, fee, lead time, confidence | It lands on the board with no refresh. OpenAI reads the reply. Three unit prices, a delivery fee, a one -day lead time, 99 % confidence. |
-| 2:14.1 | 2:24.9 | Reply as Nandini clicked; second card lands and parses | Nandini replies the waste the pliers actually write. Messy, pros, one item out of stock till next week. It still parses, and that becomes a seven -day lead time. |
-| 2:24.9 | 2:31.3 | Recommendation banner and ranked cards | Convex re -ranks every quote on landed cost, coverage, and lead time. Writes the reason in plain language. |
-| 2:31.3 | 2:37.2 | Purchase order table, supplier per line, PO generated | The purchase order is pre -filled with the best supplier per item. I can override any line. |
-| 2:37.2 | 2:41.0 | Send purchase order clicked; sent confirmation | One click, and the order goes back in the same email thread. |
-| 2:41.0 | 2:45.8 | Orders page | Every order is on record. Every quote feeds the price watch. |
-| 2:45.8 | 2:50.3 | Price watch, then back to requests | Sorcer. Built on Convex with Firecrawl, Agent Mail, and OpenAI. |
-| 2:50.3 | 2:51.3 | Requests list, hold | Thanks for watching. |
-
-## Audio processing applied
-
-- High-pass at 80 Hz and low-pass at 12 kHz to remove rumble and hiss
-- Spectral noise reduction (afftdn), de-esser
-- Compression 3:1 with make-up gain, gentle EQ (minus 2 dB at 180 Hz, plus 2 dB at 3 kHz for presence)
-- Loudness normalised to -16 LUFS, true peak -1.5 dB (YouTube spec)
-
-The cleaned track is `narration-clean.m4a`; the raw recording is untouched.
+| 0:00.0 | 0:06.2 | Animated shopfront | My mother runs a small provision shop in our hometown, and I used to spend most of my evenings after college helping her behind the counter. |
+| 0:06.2 | 0:12.1 | The restock list writes itself | Every couple of days she has to restock. Because she keeps her inventory properly, writing the list takes her about 2 minutes, |
+| 0:12.1 | 0:29.2 | Three phones, voice note, photo, clock | but getting the prices from suppliers is the part that eats her morning. One supplier tells her to call back after 4, another sends a voice note, and the third sends a photo of last month's list. Somehow by lunch she has the prices, but it's cost her the morning and a dozen follow -ups, and she has to do it all again in 2 days. |
+| 0:29.2 | 0:37.4 | Dark screen, the list types itself, five steps | That repetition is the real problem, and it's exactly the kind of thing a bit of clever automation could take over, scraping the prices and doing the emailing for her. |
+| 0:37.4 | 0:42.8 | Sourcer title card | Thus, I built Sourcer as part of Convex Allgas Hackathon, and everything you're about to see runs on real email. |
+| 0:42.8 | 0:48.3 | Empty dashboard for Chai Corner Cafe | For the demo, let's take a cafe in Bengaluru called Chai Corner Cafe, with no orders and no suppliers yet. |
+| 0:48.3 | 0:56.5 | Suppliers page, Find suppliers clicked, Firecrawl searching | So the first question is, who do we even ask? On the suppliers page, I type what I need, and Firecrawl goes and searches the web near the city and scrapes the pages it finds. |
+| 0:56.5 | 1:06.2 | Three candidates with reasons, Accept and Reject | Then, OpenAI reads those pages, and keeps only the ones that are actually wholesalers, with a reason next to each one. Nothing gets emailed until I accept a supplier myself. |
+| 1:06.2 | 1:12.6 | IndiaMART link pasted, Track clicked | A few suppliers put their price lists online, so I give Sourcer the link, and Firecrawl scrapes it now and again every week. |
+| 1:12.6 | 1:19.3 | Price watch: tracked page priced, eight paneer rows | That one page gave us 8 paneer prices per kilo. And from now on, when a rate moves, the cafe sees it before ordering. |
+| 1:19.3 | 1:23.0 | New request, note being typed | Now the cafe wants to place an actual order, so I type it the way I'd text it to myself. |
+| 1:23.0 | 1:31.7 | Line item chips, eggs flagged and set to 5 dozen | OpenAI turns that into line items with proper quantities. And items which had no quantity, eggs in this case gets flagged, so Sourcer asks me to fill it in rather than guessing. |
+| 1:31.7 | 1:39.3 | Reply-by set, Create request clicked | The cafe sets a reply by time, basically a deadline, and when that passes, the request closes and ranks whatever came in. |
+| 1:39.3 | 1:45.8 | Drafted email, scrolling | Sourcer drafts the email with the cafe's items, delivery window, and deadline, and I can change any line before it gets sent. |
+| 1:45.8 | 1:53.0 | Send to 2 clicked, rows flip to sent | The request goes to two suppliers in two separate threads. And each of those suppliers is a real inbox on Agent Mail. |
+| 1:53.0 | 1:57.6 | Reply as Greenleaf clicked | For this demo, I'll have a supplier called Greenleaf Reply. So watch the board. |
+| 1:57.6 | 2:09.1 | Quote card lands, parses, prices scroll | That email came back through Agent Mail, hit the webhook, and the quote's already on the board. OpenAI read it, paneer at 320 a kilo, oil at 138 a litre, delivery tomorrow. |
+| 2:09.1 | 2:22.7 | Nandini card lands and parses | Now I'll trigger a reply from another supplier called Nandini, who writes like a real supplier, no table, just, we can do 301 and tomatoes out of stock till next week. Sourcer still pulls the prices out, and marks tomatoes as 7 days. |
+| 2:22.7 | 2:29.4 | Recommendation and ranked cards | Then it ranks the two on what the whole order costs delivered, and how soon it arrives, and writes the reason out in a sentence. |
+| 2:29.4 | 2:37.0 | Purchase order, supplier per line, generated | The purchase order fills in the cheapest supplier for each item, and if the cafe would rather change a supplier for an item, it's just a straight change of line. |
+| 2:37.0 | 2:42.1 | Send purchase order, confirmation | Once the PO is ready, one click and the order goes back in the same email thread they quoted in. |
+| 2:42.1 | 2:43.2 | Orders page | And it's on record. |
+| 2:43.2 | 2:51.3 | Price watch with trend | Every quote and every order feeds the price history, so on the next order, the cafe would know instantly that paneer went up, without any of the hassle. |
+| 2:51.3 | 2:55.9 | Sourcer title card | That's Sourcer, built on Convex with Firecrawl, Agent Mail, and OpenAI. Thanks for watching. |
