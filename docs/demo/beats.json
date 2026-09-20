@@ -1,0 +1,97 @@
+{
+ "beats": [
+  {
+   "key": "intro.shop",
+   "t": 1.18
+  },
+  {
+   "key": "intro.list",
+   "t": 7.42
+  },
+  {
+   "key": "intro.chaos",
+   "t": 15.22
+  },
+  {
+   "key": "intro.whatif",
+   "t": 28.8
+  },
+  {
+   "key": "intro.title",
+   "t": 42.0
+  },
+  {
+   "key": "dashboard",
+   "t": 49.4
+  },
+  {
+   "key": "suppliers",
+   "t": 55.74
+  },
+  {
+   "key": "candidates",
+   "t": 62.6
+  },
+  {
+   "key": "pricewatch",
+   "t": 70.94
+  },
+  {
+   "key": "newrequest",
+   "t": 80.78
+  },
+  {
+   "key": "lineitems",
+   "t": 86.24
+  },
+  {
+   "key": "replyby",
+   "t": 93.32
+  },
+  {
+   "key": "draft",
+   "t": 99.34
+  },
+  {
+   "key": "send",
+   "t": 107.72
+  },
+  {
+   "key": "greenleaf",
+   "t": 113.28
+  },
+  {
+   "key": "landed",
+   "t": 122.76
+  },
+  {
+   "key": "nandini",
+   "t": 134.12
+  },
+  {
+   "key": "rank",
+   "t": null
+  },
+  {
+   "key": "po",
+   "t": 151.34
+  },
+  {
+   "key": "posend",
+   "t": 157.24
+  },
+  {
+   "key": "orders",
+   "t": 161.02
+  },
+  {
+   "key": "close",
+   "t": 165.76
+  },
+  {
+   "key": "thanks",
+   "t": 170.34
+  }
+ ],
+ "end": 171.3
+}

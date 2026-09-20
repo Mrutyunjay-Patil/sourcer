@@ -24,7 +24,7 @@ the moment it lands, ranks the quotes with a written reason, and sends the
 purchase order back in the same thread.
 
 - Live app: https://careful-capybara-546.convex.site
-- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:58, animated intro, Firecrawl discovery and price watch, then the live email flow); YouTube link added at submission
+- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:52 with the owner's narration; animated intro, then one fresh live run on production cut to the narration); YouTube link added at submission
 - Repo: https://github.com/Mrutyunjay-Patil/sourcer
 
 ### Judge access
@@ -213,3 +213,14 @@ Added a Firecrawl segment to the video: supplier discovery returning three
 Bengaluru wholesalers with reasons, and the price watch showing a tracked
 IndiaMART page scraped into eight catalog prices (`docs/demo/record-firecrawl.mjs`,
 `docs/demo/splice.py`). Fixed the intro artwork and re-timed the voice-over.
+
+### 2026-09-20 - working tree (video, final)
+The owner recorded the narration. Cleaned it (noise reduction, de-ess,
+compression, EQ, loudness to -16 LUFS), transcribed it with word timestamps
+(Whisper on Workers AI), re-timed the Remotion intro scenes to the spoken
+lines, recorded one complete fresh run on production after a demo reset
+(Firecrawl discovery, a tracked price page crawled live, request, two real
+replies, ranking, purchase order), and cut each screen change to the line
+that describes it (`docs/demo/assemble.py`, `docs/demo/beats.json`). Fixed
+the Supplier book layout where the add-supplier card overlapped the tables
+at wide viewports (`src/index.css`, `src/pages/Suppliers.tsx`).
