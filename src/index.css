@@ -219,6 +219,8 @@ textarea.input { resize: vertical; min-height: 96px; line-height: 1.5; }
 .stagger > *:nth-child(5) { animation-delay: 240ms; }
 
 @media (max-width: 900px) {
+  /* Every two-column page collapses to one column; inline column templates included. */
+  .grid { grid-template-columns: 1fr !important; }
   .shell { grid-template-columns: 1fr; }
   .rail { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); flex-direction: row; flex-wrap: wrap; align-items: center; padding: 12px 16px; }
   .brand { padding: 0 8px 0 0; }
@@ -230,7 +232,28 @@ textarea.input { resize: vertical; min-height: 96px; line-height: 1.5; }
   .auth-art { padding: 28px 20px; min-height: 240px; }
   .auth-art h1 { font-size: 34px; }
   .page-head { flex-direction: column; align-items: flex-start; }
-  table.ledger { display: block; overflow-x: auto; }
+  table.ledger { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.ledger thead, table.ledger tbody { display: table; width: 100%; min-width: 520px; }
+  .card-pad { padding: 16px; }
+  .card-head { padding: 12px 16px; flex-wrap: wrap; }
+  .page-head h1 { font-size: 28px; }
+  .row.spread { flex-direction: column; align-items: stretch; }
+  .btn { justify-content: center; }
+  .chip { max-width: 100%; flex-wrap: wrap; }
+  .rail { gap: 10px; }
+  .rail > .btn { width: 100%; }
+  .brand { flex: 1 1 100%; }
+  .nav { flex: 1 1 100%; }
   .timeline { flex-wrap: wrap; }
-  .timeline .step { min-width: 46%; }
+  .timeline .step { min-width: 46%; border-left: 1px solid var(--line); border-radius: 0; }
+  .quote-card .rank { font-size: 40px; }
+  .auth-form { padding: 24px 16px; }
+}
+
+@media (max-width: 480px) {
+  .main { padding: 14px 12px 60px; }
+  .page-head h1 { font-size: 24px; }
+  table.ledger { font-size: 13px; }
+  table.ledger td, table.ledger th { padding: 9px 10px; }
+  .timeline .step { min-width: 100%; }
 }

@@ -233,3 +233,14 @@ production run so each sentence has its own screen for exactly as long as
 it is spoken, with cut points placed from the actual footage rather than
 script marks (`docs/demo/assemble.py`, `docs/demo/beats.json`,
 `docs/demo/voiceover.md`).
+
+### 2026-09-20 - working tree (responsive pass and tests)
+Every page now collapses to one column below 900px, tables scroll inside
+their card on phones, and spacing tightens below 480px (`src/index.css`).
+Added a test suite: Vitest with Testing Library for the formatting and
+error helpers, sign-in, the request composer, dashboard and shell (mocked
+Convex hooks), and convex-test for tenant isolation, validation, ranking
+and purchase-order override rules against the real schema (38 tests,
+`npm test`). A Playwright smoke test signs in to the deployed app and checks
+every page at phone, tablet and desktop widths for overflow and console
+errors (`npm run test:e2e`), passing on production.
