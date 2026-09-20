@@ -445,12 +445,13 @@ const SceneTitle: React.FC = () => {
 // Composition
 // ---------------------------------------------------------------------------
 
+// Scene lengths follow the recorded narration (transitions overlap 0.6s each).
 export const SCENES = {
-  shop: 7 * 30,
-  list: 9 * 30,
-  chaos: 11 * 30,
-  whatIf: 10 * 30,
-  title: 5 * 30,
+  shop: Math.round(8.0 * 30),
+  list: Math.round(8.4 * 30),
+  chaos: Math.round(14.2 * 30),
+  whatIf: Math.round(13.8 * 30),
+  title: Math.round(6.5 * 30),
 };
 const T = 18;
 export const INTRO_FRAMES = SCENES.shop + SCENES.list + SCENES.chaos + SCENES.whatIf + SCENES.title - 4 * T;

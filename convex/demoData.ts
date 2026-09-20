@@ -129,6 +129,19 @@ export const resetMine = mutation({
       .withIndex("by_business_status", (q) => q.eq("businessId", business._id).eq("status", "candidate"))
       .collect();
     for (const c of candidates) await ctx.db.delete(c._id);
+    // Tracked pages and the catalog prices they produced go too, so a demo
+    // run can show the first crawl happening live.
+    const pages = await ctx.db
+      .query("trackedPages")
+      .withIndex("by_business", (q) => q.eq("businessId", business._id))
+      .collect();
+    for (const p of pages) await ctx.db.delete(p._id);
+    const catalog = await ctx.db
+      .query("priceHistory")
+      .withIndex("by_business", (q) => q.eq("businessId", business._id))
+      .filter((q) => q.neq(q.field("sourceUrl"), undefined))
+      .collect();
+    for (const row of catalog) await ctx.db.delete(row._id);
     const quoteHistory = await ctx.db
       .query("priceHistory")
       .withIndex("by_business", (q) => q.eq("businessId", business._id))

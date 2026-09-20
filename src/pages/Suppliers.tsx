@@ -49,7 +49,7 @@ export default function Suppliers() {
   return (
     <>
       <PageHead eyebrow="Suppliers" title="Supplier book" />
-      <div className="grid" style={{ gridTemplateColumns: "minmax(0, 1.5fr) minmax(0, 1fr)" }}>
+      <div className="grid" style={{ gridTemplateColumns: "minmax(0, 1fr) 360px" }}>
         <div className="stack" style={{ gap: 18 }}>
           <div className="card">
             <div className="card-head">
@@ -112,15 +112,15 @@ export default function Suppliers() {
               <Empty title="No suppliers yet">Add one by hand on the right, or discover some above.</Empty>
             ) : (
               <table className="ledger">
-                <thead><tr><th>Supplier</th><th>Email</th><th>Track a price page</th><th /></tr></thead>
+                <thead><tr><th style={{ width: "26%" }}>Supplier</th><th style={{ width: "26%" }}>Email</th><th>Track a price page</th><th /></tr></thead>
                 <tbody>
                   {accepted.map((s) => (
                     <tr key={s._id}>
                       <td><strong>{s.name}</strong>{s.website && <div className="tiny"><a href={s.website} target="_blank" rel="noreferrer">{s.website}</a></div>}{s.source === "discovered" && <span className="tiny muted"> · discovered</span>}</td>
-                      <td className="mono small">{s.email}</td>
+                      <td className="mono small" style={{ wordBreak: "break-all" }}>{s.email}</td>
                       <td>
                         <span className="row" style={{ flexWrap: "nowrap" }}>
-                          <input className="input" style={{ width: 220 }} placeholder="https://supplier.com/price-list" value={trackUrl[s._id] ?? ""} onChange={(e) => setTrackUrl({ ...trackUrl, [s._id]: e.target.value })} />
+                          <input className="input" style={{ minWidth: 140, flex: 1 }} placeholder="https://supplier.com/price-list" value={trackUrl[s._id] ?? ""} onChange={(e) => setTrackUrl({ ...trackUrl, [s._id]: e.target.value })} />
                           <button type="button" className="btn sm secondary" disabled={!trackUrl[s._id]} onClick={async () => { try { await track({ supplierId: s._id, url: trackUrl[s._id] }); setTrackUrl({ ...trackUrl, [s._id]: "" }); push("Page queued for a price crawl.", "ok"); } catch (err) { fail(err); } }}>Track</button>
                         </span>
                       </td>

@@ -94,6 +94,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .card-pad { padding: 20px 22px; }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
 .grid { display: grid; gap: 18px; }
+.grid > * { min-width: 0; }
+.card { min-width: 0; overflow: hidden; }
+table.ledger td a { word-break: break-all; }
 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .stack { display: grid; gap: 12px; }
