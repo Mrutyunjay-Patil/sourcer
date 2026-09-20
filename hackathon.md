@@ -24,7 +24,7 @@ the moment it lands, ranks the quotes with a written reason, and sends the
 purchase order back in the same thread.
 
 - Live app: https://careful-capybara-546.convex.site
-- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (92 seconds, captioned); YouTube link added at submission
+- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:54, animated intro plus live walkthrough); YouTube link added at submission
 - Repo: https://github.com/Mrutyunjay-Patil/sourcer
 
 ### Judge access
@@ -199,3 +199,11 @@ exactly one follow-up nudge two minutes after the RFQ while the supplier
 who had replied received none. Added a one-click demo reset for demo
 accounts (`src/components/Shell.tsx`, `convex/demoData.ts`). Deployed
 build shows no console errors on the request, prices and orders screens.
+
+### 2026-09-20 - working tree
+Re-made the demo video: a 40 second Remotion (React) intro that tells the
+problem through the family provision shop, followed by a slower live
+walkthrough on production with a visible cursor and no subtitles, cut to
+2:54 total (`docs/demo/intro/`, `docs/demo/record.mjs`,
+`docs/demo/sourcer-demo.mp4`). Voice-over script with timestamps for the
+owner to record is in `docs/demo/voiceover.md`.
