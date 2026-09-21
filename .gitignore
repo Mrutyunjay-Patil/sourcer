@@ -8,3 +8,4 @@ dist
 .gstack/
 .gstack
 coverage
+docs/social-post.md
