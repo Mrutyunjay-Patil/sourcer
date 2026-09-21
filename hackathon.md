@@ -8,11 +8,11 @@
 - **Frontend:** Convex static hosting
 - **Convex deployment:** https://careful-capybara-546.convex.cloud
 - **Components:** @convex-dev/static-hosting, @agentmail/convex, @firecrawl/firecrawl-convex, @convex-dev/workflow, @convex-dev/rate-limiter
-- **Convex features:** schema, indexes, queries, mutations, actions, Node actions, scheduled functions, crons, file storage, HTTP actions, components, durable workflows
+- **Convex features:** schema, indexes, queries, mutations, actions, Node actions, scheduled functions, crons, file storage, HTTP actions, components, durable workflows, rate limiting, paginated component queries
 - **AI models:** openai/gpt-oss-120b (OpenAI open-weight model served through Cloudflare Workers AI via the OpenAI SDK; base URL and model are env vars so api.openai.com is a one-line switch)
 - **Auth:** Convex Auth
 - **Started:** 2026-09-19T14:59:33Z
-- **Last updated:** 2026-09-19T21:00:00Z
+- **Last updated:** 2026-09-21T11:27:29Z
 
 ## The pitch
 
@@ -29,10 +29,14 @@ purchase order back in the same thread.
 
 ### Judge access
 
-- Sign in at https://careful-capybara-546.convex.site with
-  `judge@sourcer.demo` / `SourcerJudge2026` (seeded demo kitchen, Chai
-  Corner Cafe, Bengaluru). Or create your own account; onboarding takes a
-  minute and has a "load the seeded demo kitchen" shortcut.
+- Best path: create your own account at
+  https://careful-capybara-546.convex.site. Onboarding takes a minute and
+  ends with a "Skip: load the seeded demo kitchen" button that gives you
+  suppliers and price history straight away.
+- Or use the shared demo account, `judge@sourcer.demo` /
+  `SourcerJudge2026` (Chai Corner Cafe, Bengaluru). It is one mutable
+  account, so if another judge has just reset it you may land on an empty
+  kitchen; the reset button in the sidebar restores it.
 - On any sent request, the "Demo suppliers" buttons make a real supplier
   inbox on AgentMail reply to its RFQ email. The reply travels through
   AgentMail, hits the signed webhook, and lands on the board live. Nothing
@@ -162,7 +166,7 @@ owner review; a tracked IndiaMART page yielded eight catalog paneer prices
 through Firecrawl scrape plus OpenAI extraction, now visible in the price
 watch with a trend sparkline (`convex/pricing.ts`, `src/pages/Prices.tsx`).
 
-### 2026-09-20 - 3e638fd and working tree
+### 2026-09-20 - 3e638fd, e5c5b61
 End-to-end run of the email loop on the dev deployment with real AgentMail
 inboxes: an RFQ went to two supplier inboxes, each replied through the
 AgentMail API, the signed webhook landed each reply on the quote board
@@ -192,7 +196,7 @@ Bugs found and fixed by that run:
 Production: judge account created, demo kitchen seeded, sourcing inbox
 attached, dev webhook removed so production owns inbox events.
 
-### 2026-09-20 - working tree
+### 2026-09-20 - d2dd2a5
 Production verification with the judge account: the full flow ran under
 Playwright against the live site in 93 seconds (note to line items, eggs
 question, AI draft, send to two real supplier inboxes, two replies landing
@@ -205,7 +209,7 @@ who had replied received none. Added a one-click demo reset for demo
 accounts (`src/components/Shell.tsx`, `convex/demoData.ts`). Deployed
 build shows no console errors on the request, prices and orders screens.
 
-### 2026-09-20 - working tree
+### 2026-09-20 - cacc47b
 Re-made the demo video: a 40 second Remotion (React) intro that tells the
 problem through the family provision shop, followed by a slower live
 walkthrough on production with a visible cursor and no subtitles, cut to
@@ -213,13 +217,13 @@ walkthrough on production with a visible cursor and no subtitles, cut to
 `docs/demo/sourcer-demo.mp4`). Voice-over script with timestamps for the
 owner to record is in `docs/demo/voiceover.md`.
 
-### 2026-09-20 - working tree (video, second pass)
+### 2026-09-20 - 455804b (video, second pass)
 Added a Firecrawl segment to the video: supplier discovery returning three
 Bengaluru wholesalers with reasons, and the price watch showing a tracked
 IndiaMART page scraped into eight catalog prices (`docs/demo/record-firecrawl.mjs`,
 `docs/demo/splice.py`). Fixed the intro artwork and re-timed the voice-over.
 
-### 2026-09-20 - working tree (video, final)
+### 2026-09-20 - a386b31, cd0ec14 (video, final)
 The owner recorded the narration. Cleaned it (noise reduction, de-ess,
 compression, EQ, loudness to -16 LUFS), transcribed it with word timestamps
 (Whisper on Workers AI), re-timed the Remotion intro scenes to the spoken
@@ -230,7 +234,7 @@ that describes it (`docs/demo/assemble.py`, `docs/demo/beats.json`). Fixed
 the Supplier book layout where the add-supplier card overlapped the tables
 at wide viewports (`src/index.css`, `src/pages/Suppliers.tsx`).
 
-### 2026-09-20 - working tree (video, narration rewrite)
+### 2026-09-20 - 79471ff (video, narration rewrite)
 Rewrote the narration in the owner's own words (the shop is his mother's,
 the problem is the repeated chasing every restock), re-timed the Remotion
 intro and added an outro title card to the new audio, and re-cut the fresh
@@ -239,18 +243,18 @@ it is spoken, with cut points placed from the actual footage rather than
 script marks (`docs/demo/assemble.py`, `docs/demo/beats.json`,
 `docs/demo/voiceover.md`).
 
-### 2026-09-20 - working tree (responsive pass and tests)
+### 2026-09-20 - 2a7ef17 (responsive pass and tests)
 Every page now collapses to one column below 900px, tables scroll inside
 their card on phones, and spacing tightens below 480px (`src/index.css`).
 Added a test suite: Vitest with Testing Library for the formatting and
 error helpers, sign-in, the request composer, dashboard and shell (mocked
 Convex hooks), and convex-test for tenant isolation, validation, ranking
-and purchase-order override rules against the real schema (38 tests,
+and purchase-order override rules against the real schema (39 tests,
 `npm test`). A Playwright smoke test signs in to the deployed app and checks
 every page at phone, tablet and desktop widths for overflow and console
 errors (`npm run test:e2e`), passing on production.
 
-### 2026-09-20 - working tree (lean on components)
+### 2026-09-20 - 6277f8b (lean on components)
 Audit of what was custom where a component exists. Replaced the hand-rolled
 AI spend counter with the rate-limiter component (fixed-window request and
 token budgets per business, plus token-bucket throttles for discovery and
@@ -262,3 +266,11 @@ page for the weekly cron. The quote card now shows the actual email
 conversation from the AgentMail component's stored inbound messages.
 The AI Budget component was evaluated and skipped for now: its published
 alpha has no metering hook for direct provider calls.
+
+### 2026-09-21 - working tree
+Deleting a supplier now takes its tracked pages, site crawls and catalog
+prices with it, so the price watch can never show a row belonging to a
+supplier that no longer exists (`convex/suppliers.ts`). Cleaned the rows a
+test crawl had orphaned on production: the price watch is back to 13
+products, each attributed to a live supplier, with the eight paneer prices
+from the tracked IndiaMART page the demo video refers to.

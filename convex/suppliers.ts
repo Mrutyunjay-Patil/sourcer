@@ -117,6 +117,23 @@ export const remove = mutation({
     if (inFlight) {
       throw new ConvexError("This supplier has RFQ history. Reject it instead of deleting.");
     }
+    // Everything this supplier produced goes with it, so the price watch never
+    // shows rows belonging to a supplier that no longer exists.
+    const pages = await ctx.db
+      .query("trackedPages")
+      .withIndex("by_supplier", (q) => q.eq("supplierId", supplierId))
+      .collect();
+    for (const page of pages) await ctx.db.delete(page._id);
+    const crawls = await ctx.db
+      .query("siteCrawls")
+      .withIndex("by_supplier", (q) => q.eq("supplierId", supplierId))
+      .collect();
+    for (const crawl of crawls) await ctx.db.delete(crawl._id);
+    const catalogPrices = await ctx.db
+      .query("priceHistory")
+      .withIndex("by_supplier", (q) => q.eq("supplierId", supplierId))
+      .collect();
+    for (const row of catalogPrices) await ctx.db.delete(row._id);
     await ctx.db.delete(supplierId);
   },
 });
