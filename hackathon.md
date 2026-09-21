@@ -154,7 +154,7 @@ deployment: sign up, onboarding, OpenAI item parsing (eggs flagged with a
 question), AI draft, and a real RFQ send through the AgentMail component.
 Deployed backend and static site to production.
 
-### 2026-09-19 - 432849e, 0c67c9b
+### 2026-09-19 - 432849e, 94e48e2
 Relative times now tick, every non-submit button is typed, README documents
 setup in under ten steps, and the demo script and social copy live in
 `docs/`. Repo readiness pass: a fresh clone installs, applies the
@@ -166,7 +166,7 @@ owner review; a tracked IndiaMART page yielded eight catalog paneer prices
 through Firecrawl scrape plus OpenAI extraction, now visible in the price
 watch with a trend sparkline (`convex/pricing.ts`, `src/pages/Prices.tsx`).
 
-### 2026-09-20 - 3e638fd, e5c5b61
+### 2026-09-20 - 4c68f28, b8311f4
 End-to-end run of the email loop on the dev deployment with real AgentMail
 inboxes: an RFQ went to two supplier inboxes, each replied through the
 AgentMail API, the signed webhook landed each reply on the quote board
@@ -196,7 +196,7 @@ Bugs found and fixed by that run:
 Production: judge account created, demo kitchen seeded, sourcing inbox
 attached, dev webhook removed so production owns inbox events.
 
-### 2026-09-20 - d2dd2a5
+### 2026-09-20 - 2dcd1b6
 Production verification with the judge account: the full flow ran under
 Playwright against the live site in 93 seconds (note to line items, eggs
 question, AI draft, send to two real supplier inboxes, two replies landing
@@ -209,7 +209,7 @@ who had replied received none. Added a one-click demo reset for demo
 accounts (`src/components/Shell.tsx`, `convex/demoData.ts`). Deployed
 build shows no console errors on the request, prices and orders screens.
 
-### 2026-09-20 - cacc47b
+### 2026-09-20 - 7e71225
 Re-made the demo video: a 40 second Remotion (React) intro that tells the
 problem through the family provision shop, followed by a slower live
 walkthrough on production with a visible cursor and no subtitles, cut to
@@ -217,13 +217,13 @@ walkthrough on production with a visible cursor and no subtitles, cut to
 `docs/demo/sourcer-demo.mp4`). Voice-over script with timestamps for the
 owner to record is in `docs/demo/voiceover.md`.
 
-### 2026-09-20 - 455804b (video, second pass)
+### 2026-09-20 - a383a1e (video, second pass)
 Added a Firecrawl segment to the video: supplier discovery returning three
 Bengaluru wholesalers with reasons, and the price watch showing a tracked
 IndiaMART page scraped into eight catalog prices (`docs/demo/record-firecrawl.mjs`,
 `docs/demo/splice.py`). Fixed the intro artwork and re-timed the voice-over.
 
-### 2026-09-20 - a386b31, cd0ec14 (video, final)
+### 2026-09-20 - 2edac33, c02e5dd (video, final)
 The owner recorded the narration. Cleaned it (noise reduction, de-ess,
 compression, EQ, loudness to -16 LUFS), transcribed it with word timestamps
 (Whisper on Workers AI), re-timed the Remotion intro scenes to the spoken
@@ -234,7 +234,7 @@ that describes it (`docs/demo/assemble.py`, `docs/demo/beats.json`). Fixed
 the Supplier book layout where the add-supplier card overlapped the tables
 at wide viewports (`src/index.css`, `src/pages/Suppliers.tsx`).
 
-### 2026-09-20 - 79471ff (video, narration rewrite)
+### 2026-09-20 - 6ffd4a4 (video, narration rewrite)
 Rewrote the narration in the owner's own words (the shop is his mother's,
 the problem is the repeated chasing every restock), re-timed the Remotion
 intro and added an outro title card to the new audio, and re-cut the fresh
@@ -243,7 +243,7 @@ it is spoken, with cut points placed from the actual footage rather than
 script marks (`docs/demo/assemble.py`, `docs/demo/beats.json`,
 `docs/demo/voiceover.md`).
 
-### 2026-09-20 - 2a7ef17 (responsive pass and tests)
+### 2026-09-20 - 4bb5921 (responsive pass and tests)
 Every page now collapses to one column below 900px, tables scroll inside
 their card on phones, and spacing tightens below 480px (`src/index.css`).
 Added a test suite: Vitest with Testing Library for the formatting and
@@ -254,7 +254,7 @@ and purchase-order override rules against the real schema (39 tests,
 every page at phone, tablet and desktop widths for overflow and console
 errors (`npm run test:e2e`), passing on production.
 
-### 2026-09-20 - 6277f8b (lean on components)
+### 2026-09-20 - babbb42 (lean on components)
 Audit of what was custom where a component exists. Replaced the hand-rolled
 AI spend counter with the rate-limiter component (fixed-window request and
 token budgets per business, plus token-bucket throttles for discovery and
