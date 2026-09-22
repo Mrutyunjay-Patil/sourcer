@@ -5,6 +5,8 @@
 - **What it does:** Supplier sourcing and reorder agent for restaurants and small shops: discovers suppliers, runs the RFQ email thread, parses and ranks quotes, and sends the purchase order.
 - **Live app:** https://careful-capybara-546.convex.site
 - **Repo:** https://github.com/Mrutyunjay-Patil/sourcer
+- **Demo video:** https://youtu.be/UWMZj-ikqfw (2:56)
+- **LinkedIn post:** https://lnkd.in/p/dzjEDdMj
 - **Frontend:** Convex static hosting
 - **Convex deployment:** https://careful-capybara-546.convex.cloud
 - **Components:** @convex-dev/static-hosting, @agentmail/convex, @firecrawl/firecrawl-convex, @convex-dev/workflow, @convex-dev/rate-limiter
@@ -12,7 +14,7 @@
 - **AI models:** openai/gpt-oss-120b (OpenAI open-weight model served through Cloudflare Workers AI via the OpenAI SDK; base URL and model are env vars so api.openai.com is a one-line switch)
 - **Auth:** Convex Auth
 - **Started:** 2026-09-19T14:59:33Z
-- **Last updated:** 2026-09-21T11:27:29Z
+- **Last updated:** 2026-09-22T14:55:31Z
 
 ## The pitch
 
@@ -24,8 +26,9 @@ the moment it lands, ranks the quotes with a written reason, and sends the
 purchase order back in the same thread.
 
 - Live app: https://careful-capybara-546.convex.site
-- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:56, owner's narration; animated intro on the family shop, then one fresh live run on production cut sentence by sentence to the narration); YouTube link added at submission
+- Demo video: `docs/demo/sourcer-demo.mp4` in this repo (2:56, owner's narration; animated intro on the family shop, then one fresh live run on production cut sentence by sentence to the narration); on YouTube at https://youtu.be/UWMZj-ikqfw
 - Repo: https://github.com/Mrutyunjay-Patil/sourcer
+- LinkedIn post: https://lnkd.in/p/dzjEDdMj
 
 ### Judge access
 
