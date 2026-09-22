@@ -7,6 +7,8 @@
 - **Repo:** https://github.com/Mrutyunjay-Patil/sourcer
 - **Demo video:** https://youtu.be/UWMZj-ikqfw (2:56)
 - **LinkedIn post:** https://lnkd.in/p/dzjEDdMj
+- **X post:** https://x.com/dev_mrutyunjay/status/2102412783136784671
+- **Submitted:** 2026-09-22 on vibeapps.dev
 - **Frontend:** Convex static hosting
 - **Convex deployment:** https://careful-capybara-546.convex.cloud
 - **Components:** @convex-dev/static-hosting, @agentmail/convex, @firecrawl/firecrawl-convex, @convex-dev/workflow, @convex-dev/rate-limiter
@@ -14,7 +16,7 @@
 - **AI models:** openai/gpt-oss-120b (OpenAI open-weight model served through Cloudflare Workers AI via the OpenAI SDK; base URL and model are env vars so api.openai.com is a one-line switch)
 - **Auth:** Convex Auth
 - **Started:** 2026-09-19T14:59:33Z
-- **Last updated:** 2026-09-22T14:55:31Z
+- **Last updated:** 2026-09-22T15:08:51Z
 
 ## The pitch
 
